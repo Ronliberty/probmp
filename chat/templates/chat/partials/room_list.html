@@ -1,0 +1,13 @@
+<ul id="rooms">
+    {% for room in chat_groups %}
+        <li>
+            <button
+                hx-get="{% url 'chat:load_messages' room.id %}"
+                hx-target="#messages"
+                hx-swap="innerHTML"
+            >
+                {{ room.name }}
+            </button>
+        </li>
+    {% endfor %}
+</ul>

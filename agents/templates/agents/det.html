@@ -1,0 +1,54 @@
+{% extends 'dashboard/main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            {% if agent.images.all %}
+                <div id="agentCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in agent.images.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ agent.names }}">
+                                {% if image.caption %}
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <p>{{ image.caption }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#agentCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#agentCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            {% else %}
+                <img src="" class="img-fluid" alt="Default Agent">
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <h2>{{ agent.names }}</h2>
+            <p><strong>Bio:</strong> {{ agent.bio }}</p>
+            <p><strong>Email:</strong> <a href="mailto:{{ agent.email }}">{{ agent.email }}</a></p>
+            <p><strong>Phone:</strong> {{ agent.phone_number }}</p>
+            <p><strong>Portfolio:</strong> {{ agent.portfolio }}</p>
+            {% if agent.social_links %}
+                <h4>Social Links:</h4>
+                <ul>
+                    {% for key, value in agent.social_links.items %}
+                        <li><a href="{{ value }}" target="_blank">{{ key }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <a href="{% url 'agents:agents-manager' %}" class="btn btn-secondary mt-3">Back to Agents</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

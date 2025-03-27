@@ -1,0 +1,27 @@
+
+
+    <!-- Back Button -->
+
+
+    {% for post in post %}
+        <div class="post-item">
+            <p class="post-title">{{ post.title }}</p>
+            <p class="post-descr">{{ post.description }}</p>
+
+            <h1 class="post-sub">Check Out This</h1>
+            <div>
+                <a href="{% url 'freelance:post-detail' post.slug %}" class="btn-click">Click Here!</a>
+            </div>
+
+            {% if post.link %}
+                <iframe width="80%" height="600" src="{{ post.link }}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No posts available.</p>
+    {% endfor %}
+
+

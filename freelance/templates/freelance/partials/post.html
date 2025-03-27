@@ -1,0 +1,50 @@
+{% if post %}
+    {% for post in post %}
+        <div class="post-item" hx-boost="true">
+            <p class="post-title">{{ post.title }}</p>
+            <p class="post-descr">{{ post.description }}</p>
+
+            <h1 class="post-sub">Check Out This</h1>
+            <div>
+                <a href="{% url 'freelance:post-detail' post.slug %}"
+                   class="btn-click"
+                   hx-get="{% url 'freelance:post-detail' post.slug %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   hx-indicator="#loading-indicator">
+                    Click Here!
+                </a>
+            </div>
+
+            {% if post.link %}
+                <iframe width="80%" height="600" src="{{ post.link }}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {# Infinite Scroll/Pagination #}
+    {% if page_obj.has_next %}
+        <div class="text-center my-4"
+             hx-get="{% url 'freelance:post-list' %}?page={{ page_obj.next_page_number }}"
+             hx-trigger="revealed"
+             hx-swap="afterend"
+             hx-indicator="#loading-indicator">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted text-center">No more posts to load</p>
+    {% endif %}
+
+{% else %}
+    <p class="text-muted">No posts available.</p>
+{% endif %}
+
+{# Loading Indicator #}
+<div id="loading-indicator" class="htmx-indicator spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>

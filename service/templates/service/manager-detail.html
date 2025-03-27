@@ -1,0 +1,23 @@
+{% extends 'dashboard/main.html' %}
+
+{% block content %}
+
+
+<div class="container">
+    <h2>{{ services.name }}</h2>
+    <p>{{ services.description }}</p>
+
+    {% if services.sample_website %}
+        <p><a href="{{ services.sample_website }}" target="_blank">Sample Website</a></p>
+    {% endif %}
+
+    <p><strong>Country:</strong> {{ services.country }}</p>
+    <p><strong>Created by:</strong> {{ services.created_by }}</p>
+    <p><strong>Created at:</strong> {{ services.created_at }}</p>
+
+    <a href="" class="btn btn-primary">Edit</a>
+    <a href="{% url 'service:delete-service' services.slug %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'service:service-manager' %}" class="btn btn-secondary">Back to List</a>
+</div>
+
+{% endblock %}

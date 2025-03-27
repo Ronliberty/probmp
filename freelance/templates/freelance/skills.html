@@ -1,0 +1,32 @@
+
+
+
+<!--    <div class="skills">-->
+
+       <div class="container mt-4">
+    <h1 class="mb-4">Available Skills</h1>
+
+    {% for skill in skills %}
+        <div class="skill-item">
+            <p class="skill-name">{{ skill.name }}</p>
+            <p class="skill-descr">{{ skill.description }}</p>
+
+            <h2 class="skill-sub">Learn More</h2>
+            <div>
+                <a href="{% url 'freelance:skills-detail' skill.slug %}" class="btn-click">View Details</a>
+            </div>
+
+            {% if skill.resource_link %}
+                <iframe width="80%" height="600" src="{{ skill.resource_link }}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p class="no-skills">No skills available.</p>
+    {% endfor %}
+</div>
+
+
+

@@ -1,0 +1,20 @@
+{% if hero_content %}
+<div data-aos="zoom-in" data-aos-delay="200">
+    <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-800 leading-tight">
+        {{ hero_content.title }}<br>
+        <span class="bg-gradient-to-r from-green-400 to-green-600 text-transparent bg-clip-text">
+            {{ hero_content.subtitle }}
+        </span>
+    </h1>
+    <p class="text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="300">
+        {{ hero_content.explanation }}
+    </p>
+    <div class="flex justify-center space-x-4" data-aos="fade-up" data-aos-delay="400">
+        <a href="{{ hero_content.cta_link }}" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all transform hover:scale-105">
+            {{ hero_content.cta_text }}
+        </a>
+    </div>
+</div>
+{% else %}
+<p class="text-center text-gray-600">No hero section content available.</p>
+{% endif %}

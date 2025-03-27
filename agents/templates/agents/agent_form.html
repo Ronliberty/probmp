@@ -1,0 +1,50 @@
+{% extends 'dashboard/main.html' %}
+
+
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Create New Agent</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Render Agent Form Fields -->
+        <fieldset>
+            <legend>Agent Details</legend>
+            {{ form.as_p }}
+        </fieldset>
+
+        <!-- Render Image Upload Fields -->
+        <fieldset>
+            <legend>Upload Images</legend>
+            {{ image_form.as_p }}
+            <label for="images">Select Images:</label>
+            <input type="file" name="images" id="images" multiple class="form-control">
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary mt-3">Save Agent</button>
+        <a href="{% url 'agents:agents-manager' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+
+<!-- Display Form Errors -->
+{% if form.errors or image_form.errors %}
+<div class="alert alert-danger mt-3">
+    <strong>There were errors in your submission:</strong>
+    <ul>
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                <li>{{ field|title }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for field, errors in image_form.errors.items %}
+            {% for error in errors %}
+                <li>{{ field|title }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% endblock %}

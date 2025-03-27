@@ -1,0 +1,113 @@
+/* General Reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  background-color: #f1f1f1;
+  color: #000;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #000;
+  color: #f1f1f1;
+  padding: 10px 20px;
+}
+
+.navname {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navlinks {
+  display: flex;
+}
+
+.ullinks {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.links {
+  margin: 0 10px;
+}
+
+.links a {
+  text-decoration: none;
+  color: #f1f1f1;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.links a:hover {
+  color: #ff5722;
+}
+
+/* Hero Section */
+.hero_sect {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 70px);
+  background: #000;
+  color: #f1f1f1;
+  text-align: center;
+}
+
+.hero p {
+  font-size: 18px;
+  margin: 20px 0;
+}
+
+.hero strong {
+  font-weight: bold;
+}
+
+.hero em {
+  font-style: italic;
+  color: #ff5722;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #ff5722;
+  color: #f1f1f1;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: #e64a19;
+}
+
+/* Footer */
+footer {
+  background: #000;
+  color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+}
+
+footer a {
+  color: #f1f1f1;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #ff5722;
+}
+
+footer i {
+  font-size: 18px;
+}

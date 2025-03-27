@@ -1,0 +1,127 @@
+{% load static %}
+{% load i18n %}
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1"></script>
+    <style>
+        body { transition: background 0.5s ease-in-out; }
+        .gradient-bg { background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #533483); background-size: 400% 400%; animation: gradientMove 8s infinite alternate ease-in-out; }
+        @keyframes gradientMove { 0% {background-position: 0% 50%;} 100% {background-position: 100% 50%;} }
+        .hover-effect:hover { transform: scale(1.1); transition: transform 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white h-screen flex flex-col items-center justify-center relative">
+
+    <!-- Particles Background -->
+    <div id="particles-js" class="absolute inset-0 z-0"></div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="themeToggle" class="absolute top-4 right-4 bg-gray-700 p-2 rounded-lg">🌙</button>
+
+    <!-- Logo & Tagline -->
+    <div class="text-center relative z-10" data-aos="fade-up">
+        <h1 class="text-4xl font-bold mb-2">Welcome to Our Community</h1>
+        <p id="tagline" class="text-lg text-gray-400">Where conversations come alive.</p>
+        <p id="liveStats" class="mt-2 text-sm text-purple-400"></p>
+    </div>
+
+    <!-- Dynamic Floating Avatars -->
+    <div class="relative mt-10 flex gap-3 overflow-hidden z-10" id="avatars">
+        <img src="https://i.pravatar.cc/50?img=1" class="w-12 h-12 rounded-full shadow-lg">
+        <img src="https://i.pravatar.cc/50?img=2" class="w-12 h-12 rounded-full shadow-lg">
+        <img src="https://i.pravatar.cc/50?img=3" class="w-12 h-12 rounded-full shadow-lg">
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-8 flex gap-4 relative z-10" data-aos="fade-up" data-aos-delay="200">
+        <a href="{% url 'account_login' %}?process=login" class="px-6 py-2 bg-purple-600 hover:shadow-lg hover:bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg transform transition hover:scale-110">Login</a>
+        <a href="{% url 'account_signup' %}" id="signupBtn" class="px-6 py-2 bg-gray-700 hover:shadow-lg hover:bg-gray-800 rounded-lg transform transition hover:scale-110 text-white text-center block">
+    {% trans "Sign Up" %}
+</a>
+
+    </div>
+
+    <!-- Social Media Login -->
+    <div class="mt-6 flex gap-4">
+        <button  class="bg-blue-500 p-2 rounded-lg hover:bg-blue-600 transform transition hover:scale-105">Login with Google</button>
+        <button class="bg-blue-400 p-2 rounded-lg hover:bg-blue-500 transform transition hover:scale-105">Login with Twitter</button>
+    </div>
+
+    <!-- Learn More Button -->
+    <button id="learnMore"  onclick="window.location.href='{% url 'base:infor-index' %}'" class="mt-6 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transform transition hover:scale-105">Learn More</button>
+
+    <!-- Hidden Easter Egg -->
+    <p id="easterEgg" class="hidden text-sm mt-6 text-gray-300">✨ You found the hidden message! Welcome, VIP.</p>
+
+    <script>
+        AOS.init();
+
+        // Typing Animation for Tagline
+        const taglines = ["Where conversations come alive.", "Meet like-minded people.", "Share your voice with the world."];
+        let taglineIndex = 0;
+        setInterval(() => {
+            taglineIndex = (taglineIndex + 1) % taglines.length;
+            document.getElementById("tagline").innerText = taglines[taglineIndex];
+        }, 3000);
+
+        // Live Stats Example
+        const liveStats = document.getElementById("liveStats");
+        let members = 10230;
+        let topics = 134;
+        setInterval(() => {
+            members += Math.floor(Math.random() * 5);
+            topics += Math.floor(Math.random() * 2);
+            liveStats.innerText = `${members} members connected | ${topics} active topics`;
+        }, 2000);
+
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById("themeToggle");
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("bg-white");
+            document.body.classList.toggle("text-black");
+        });
+
+        // Confetti on Sign-Up
+        document.getElementById("signupBtn").addEventListener("click", () => {
+            confetti();
+        });
+
+        // Smooth Scroll for Learn More Button
+        document.getElementById("learnMore").addEventListener("click", () => {
+            window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+        });
+
+        // Easter Egg Key Combination
+        document.addEventListener("keydown", (e) => {
+            if (e.shiftKey && e.key === "C") {
+                document.getElementById("easterEgg").classList.remove("hidden");
+            }
+        });
+
+        // Parallax Effect for Avatars
+        document.addEventListener("mousemove", (e) => {
+            const avatars = document.getElementById("avatars").children;
+            for (let i = 0; i < avatars.length; i++) {
+                let movement = (e.clientX - window.innerWidth / 2) * (0.002 * (i + 1));
+                avatars[i].style.transform = `translateX(${movement}px)`;
+            }
+        });
+
+        // Particles.js Config
+        particlesJS("particles-js", {
+            particles: { number: { value: 50 }, size: { value: 3 } },
+            interactivity: { events: { onhover: { enable: true, mode: "repulse" } } }
+        });
+    </script>
+</body>
+</html>

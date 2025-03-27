@@ -1,0 +1,15 @@
+{% extends 'dashboard/base.html' %}
+
+
+
+{% block content %}
+<div class="container">
+    <h2>Response Details</h2>
+    <p><strong>Service:</strong> {{ response.service_request.service.name }}</p>
+    <p><strong>Message:</strong> {{ response.message }}</p>
+    <p><strong>Responded By:</strong> {{ response.created_by }}</p>
+    <p><strong>Response Date:</strong> {{ response.created_at }}</p>
+
+    <a href="{% url 'service:list-response' %}" class="btn btn-secondary">Back to Responses</a>
+</div>
+{% endblock %}

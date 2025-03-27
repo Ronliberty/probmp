@@ -1,0 +1,14 @@
+{% extends 'dashboard/main.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h2>Create Response</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Response</button>
+    </form>
+    <a href="{% url 'service:list-response' %}" class="btn btn-secondary">Back to Responses</a>
+</div>
+{% endblock %}

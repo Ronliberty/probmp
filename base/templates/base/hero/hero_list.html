@@ -1,0 +1,90 @@
+<div class="container mx-auto px-4 mt-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Hero Content List</h1>
+
+        <!-- Dropdown with plus icon -->
+        <div class="relative">
+            <button id="dropdownCreateButton" data-dropdown-toggle="dropdownCreate" class="flex items-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center" type="button">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Create New
+            </button>
+
+            <!-- Dropdown menu -->
+            <div id="dropdownCreate" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">
+                <ul class="py-1 text-sm text-gray-700" aria-labelledby="dropdownCreateButton">
+                    <li>
+                <a href=""
+                   class="flex items-center text-gray-700 hover:text-gray-900 gap-4"
+                   hx-get="{% url 'base:hero_content_create' %}"
+                   hx-target="#content-container"
+                   hx-trigger="click"
+                   hx-push-url="true">
+                    <i class='bx bx-news text-2xl'></i>
+                    Hero
+                </a>
+            </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% if object_list %}
+    <div class="overflow-x-auto rounded-lg shadow">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3">Title</th>
+                    <th scope="col" class="px-6 py-3">Name</th>
+                    <th scope="col" class="px-6 py-3">Subtitle</th>
+                    <th scope="col" class="px-6 py-3">Description</th>
+                    <th scope="col" class="px-6 py-3">CTA Text</th>
+                    <th scope="col" class="px-6 py-3">CTA Link</th>
+                    <th scope="col" class="px-6 py-3">Active</th>
+                    <th scope="col" class="px-6 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for hero in object_list %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ hero.title }}</td>
+                    <td class="px-6 py-4">{{ hero.name }}</td>
+                    <td class="px-6 py-4">{{ hero.subtitle }}</td>
+                    <td class="px-6 py-4 max-w-xs">{{ hero.description|truncatechars:50 }}</td>
+                    <td class="px-6 py-4">{{ hero.cta_text }}</td>
+                    <td class="px-6 py-4">
+                        <a href="{{ hero.cta_link }}" target="_blank" class="text-blue-600 hover:underline">
+                            {{ hero.cta_link|truncatechars:20 }}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                            {% if hero.is_active %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ hero.is_active|yesno:"Active,Inactive" }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 space-x-2">
+                        <a href="#" class="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md text-sm">Edit</a>
+                        <a href="" class="text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md text-sm"
+                        class="flex items-center text-gray-700 hover:text-gray-900 gap-4"
+                   hx-get="{% url 'base:hero_content_delete' pk %}"
+                   hx-target="#content-container"
+                   hx-trigger="click"
+                   hx-push-url="true">
+                          Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center p-8 bg-white rounded-lg shadow">
+        <p class="text-gray-600">No hero content available.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Flowbite JS for dropdown functionality -->
+<script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>

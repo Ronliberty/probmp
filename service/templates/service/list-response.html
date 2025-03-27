@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>My Responses</h2>
+    <div id="response-list">
+        {% for response in response %}
+            <div class="response-card">
+                <h3><a href="{% url 'service:response-detail' response.slug %}">{{ response.service_request.service.name }}</a></h3>
+                <p><strong>Response:</strong> {{ response.message }}</p>
+                <p><strong>Responded At:</strong> {{ response.created_at }}</p>
+            </div>
+        {% empty %}
+            <p>No responses available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

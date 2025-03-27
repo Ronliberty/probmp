@@ -1,0 +1,77 @@
+<!-- templates/testimonials/partials/testimonial_list.html -->
+<div class="p-6 md:p-8">
+    <!-- Create Button Dropdown -->
+    <div class="mb-8">
+        <button id="dropdownCreateButton" data-dropdown-toggle="dropdownCreate"
+            class="flex items-center space-x-2 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-3 transition-all duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>Create New Testimonial</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="dropdownCreate" class="hidden z-10 w-48 bg-white rounded-lg shadow-lg border border-gray-100">
+            <div class="p-2">
+                <a href="#"
+                   class="flex items-center space-x-3 px-4 py-2.5 hover:bg-gray-50 rounded-md group"
+                   hx-get="{% url 'base:testimonial-create' %}"
+                   hx-target="#content-container"
+                   hx-push-url="true">
+                    <i class='bx bx-news text-xl text-gray-500 group-hover:text-blue-600'></i>
+                    <span class="text-gray-700 group-hover:text-blue-800">New Testimonial</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for testimonial in testimonials %}
+        <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 group border border-gray-100">
+            <div class="p-6">
+                <!-- Header Section -->
+                <div class="flex items-start space-x-4 mb-4">
+                    <img src="{{ testimonial.image_url }}"
+                         class="w-20 h-20 rounded-xl object-cover border-2 border-white shadow-sm">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-800">{{ testimonial.name }}</h3>
+                        <p class="text-sm text-gray-500 font-medium">{{ testimonial.role }}</p>
+                        <div class="mt-1 flex items-center space-x-1">
+                            {% for i in "12345"|make_list %}
+                            <span class="text-amber-500">{% if forloop.counter <= testimonial.rating %}★{% else %}☆{% endif %}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <blockquote class="relative pl-4">
+                    <div class="absolute left-0 top-0 h-full w-0.5 bg-blue-100 rounded-full"></div>
+                    <p class="text-gray-600 text-base leading-relaxed italic">"{{ testimonial.content }}"</p>
+                </blockquote>
+
+                <!-- Action Buttons -->
+                <div class="mt-6 flex space-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <a href="#"
+                       class="flex items-center space-x-2 text-sm px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600"
+                       hx-get="{% url 'base:testimonial-update' testimonial.slug %}"
+                       hx-target="closest div">
+                        <i class='bx bx-edit-alt text-base'></i>
+                        <span>Edit</span>
+                    </a>
+                    <a href="#"
+                       class="flex items-center space-x-2 text-sm px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600"
+                       hx-get="{% url 'base:testimonial-delete' testimonial.slug %}"
+                       hx-target="closest div">
+                        <i class='bx bx-trash text-base'></i>
+                        <span>Delete</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>

@@ -1,0 +1,19 @@
+
+    {% if tools %}
+        {% for tool in tools %}
+            <div style="background-color: #f9f9f9; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                <p class="imp-name" style="font-size: 1.2rem; color: #333; font-weight: bold;">{{ tool.name }}</p>
+                <p class="imp-descr" style="font-size: 1rem; color: #666; margin-bottom: 15px;">{{ tool.description }}</p>
+                 <a href="{% url 'freelance:tools-detail' tool.slug %}" class="btn btn-info btn-sm">View</a>
+                {% if tool.link %}
+                    <button class="imp-btn" style="background-color: #007BFF; color: white; padding: 10px 15px; font-size: 1rem; border: none; border-radius: 5px; cursor: pointer;" onclick="window.open('{{ tool.link }}');">
+                        Click Here
+                    </button>
+                {% else %}
+                    <p>No link available.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No tools available.</p>
+    {% endif %}

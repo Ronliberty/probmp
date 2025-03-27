@@ -1,0 +1,48 @@
+<div id="news-list" hx-history="true">
+    {% if news_list %}
+        {% for news in news_list %}
+            <div class="ai-card" hx-boost="true">
+                <p class="title">{{ news.headline }}</p>
+                <p class="form">{{ news.content|truncatewords:30 }}</p>
+                <div class="meta">
+                    <p class="author">By {{ news.created_by.get_full_name|default:news.created_by.username }}</p>
+                    <p class="date">{{ news.created_at|date:"F j, Y" }}</p>
+                    <a href="{% url 'freelance:news-detail' news.slug %}"
+                       class="btn btn-info btn-sm"
+                       hx-get="{% url 'freelance:news-detail' news.slug %}"
+                       hx-target="#main-content"
+                       hx-push-url="true"
+                       hx-indicator="#loading-indicator">
+                        View
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+
+        {# Infinite Scroll/Pagination #}
+        {% if page_obj.has_next %}
+            <div class="text-center my-4"
+                 hx-get="{% url 'freelance:news-list' %}?page={{ page_obj.next_page_number }}"
+                 hx-trigger="revealed"
+                 hx-swap="afterend"
+                 hx-indicator="#loading-indicator">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted text-center">No more articles to load</p>
+        {% endif %}
+
+    {% else %}
+        <p class="text-muted">No news articles available.</p>
+    {% endif %}
+</div>
+
+{# Loading Indicator #}
+<div id="loading-indicator" class="htmx-indicator spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>
+
+{# Error Handling #}
+<div id="htmx-errors" class="text-danger my-2"></div>

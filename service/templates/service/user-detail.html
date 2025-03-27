@@ -1,0 +1,20 @@
+{% extends 'dashboard/main.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ service.name }}</h2>
+    <p>{{ service.description }}</p>
+
+    {% if service.sample_website %}
+        <p><a href="{{ service.sample_website }}" target="_blank">Sample Website</a></p>
+    {% endif %}
+
+    <p><strong>Country:</strong> {{ service.country }}</p>
+    <p><strong>Created at:</strong> {{ service.created_at }}</p>
+
+        <a href="{% url 'service:create-response' request.slug %}" class="btn btn-primary">Respond</a>
+
+
+    <a href="{% url 'service:service-list' %}" class="btn btn-secondary">Back to Services</a>
+</div>
+{% endblock %}

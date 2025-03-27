@@ -1,0 +1,155 @@
+/* General Styles */
+body {
+    font-family: Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(248, 248, 248);
+    color: #000;
+    display: flex;
+    height: 100vh;
+}
+
+/* App Layout */
+#app {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Sidebar */
+#room-list {
+    width: 25%;
+    max-width: 300px;
+    background-color: white;
+    border-right: 1px solid rgb(228, 228, 228);
+    overflow-y: auto;
+    padding: 1rem;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+#room-list h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+#rooms {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#rooms li {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background-color: rgb(240, 240, 240);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#rooms li:hover {
+    background-color: rgb(220, 220, 220);
+    transform: translateY(-2px);
+}
+
+/* Chat Area */
+#chat {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    overflow: hidden;
+}
+
+#chat-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgb(228, 228, 228);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#chat-header h3 {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+#chat-header button {
+    background: #ddd;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#chat-header button:hover {
+    background: #bbb;
+}
+
+/* Messages Section */
+#messages {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgb(248, 248, 248);
+}
+
+.placeholder {
+    color: gray;
+    text-align: center;
+    margin-top: 50%;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #add8e6;
+    color: #000;
+    padding: 10px;
+    border-radius: 10px 10px 0 10px;
+    max-width: 70%;
+}
+
+.recipient-message {
+    align-self: flex-start;
+    background-color: rgb(240, 240, 240);
+    color: #000;
+    padding: 10px;
+    border-radius: 10px 10px 10px 0;
+    max-width: 70%;
+}
+
+/* Input Section */
+#input {
+    display: flex;
+    padding: 1rem;
+    border-top: 1px solid rgb(228, 228, 228);
+    background-color: white;
+    gap: 0.5rem;
+}
+
+#input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#input button {
+    background: #ddd;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#input button:hover {
+    background: #bbb;
+}

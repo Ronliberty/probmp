@@ -1,0 +1,25 @@
+
+
+
+
+
+    <h2>Services</h2>
+    <div id="service-list">
+        {% for service in services %}
+            <div class="service-card">
+                <h3>{{ service.name }}</h3>
+                <p>{{ service.description }}</p>
+                {% if service.sample_website %}
+                    <p><a href="{{ service.sample_website }}" target="_blank">Sample Website</a></p>
+                {% endif %}
+                <p><strong>Country:</strong> {{ service.country }}</p>
+                <p><small>Created at: {{ service.created_at }}</small></p>
+            </div>
+        {% empty %}
+            <p>No services available.</p>
+        {% endfor %}
+    </div>
+
+
+
+

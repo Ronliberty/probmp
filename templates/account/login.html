@@ -1,0 +1,159 @@
+{% load static %}
+{% load i18n %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Login" %} - Community App</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS (Animate On Scroll) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+    <style>
+        body {
+            transition: background 0.5s ease-in-out;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #533483);
+            background-size: 400% 400%;
+            animation: gradientMove 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white h-screen flex flex-col items-center justify-center relative">
+
+    <!-- Particles Background -->
+    <div id="particles-js" class="absolute inset-0 z-0"></div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="themeToggle" class="absolute top-4 right-4 bg-gray-700 p-2 rounded-lg">🌙</button>
+
+    <!-- Login Form -->
+    <div class="glassmorphism w-96 p-6 relative z-10" data-aos="fade-up">
+        <h2 class="text-2xl font-bold text-center mb-4">{% trans "Sign In" %}</h2>
+
+        <form id="loginForm" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="block text-sm text-gray-300">{% trans "Email Address" %}</label>
+                <input type="email" name="login" class="w-full p-2 mt-1 rounded bg-gray-800 border border-gray-600 text-white focus:ring-2 focus:ring-purple-500" required>
+            </div>
+
+            <div class="mb-4 relative">
+                <label class="block text-sm text-gray-300">{% trans "Password" %}</label>
+                <input type="password" id="password" name="password" class="w-full p-2 mt-1 rounded bg-gray-800 border border-gray-600 text-white focus:ring-2 focus:ring-purple-500" required>
+                <button type="button" id="togglePassword" class="absolute right-2 top-9 text-gray-400">
+                    <svg id="eyeIcon" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 12A3.75 3.75 0 1112 8.25M9.75 12a3.75 3.75 0 003.75 3.75M12 3c7.2 0 11.25 9 11.25 9s-4.05 9-11.25 9S.75 12 .75 12s4.05-9 11.25-9z" />
+                    </svg>
+                </button>
+            </div>
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <button type="submit" class="w-full bg-purple-600 py-2 rounded-lg hover:bg-gradient-to-r from-purple-500 to-pink-500 transform transition hover:scale-105">
+                {% trans "Login" %}
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-gray-400 mt-4">
+            <a href="{% url 'account_reset_password' %}" class="text-purple-400">{% trans "Forgot Password?" %}</a>
+        </p>
+        <p class="text-center text-sm text-gray-400 mt-2">
+            {% trans "Don't have an account?" %}
+            <a href="{% url 'account_signup' %}" class="text-purple-400">{% trans "Sign Up" %}</a>
+        </p>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        AOS.init();
+
+        // Dark Mode Toggle with Memory
+        const themeToggle = document.getElementById("themeToggle");
+        const body = document.body;
+
+        function setTheme(theme) {
+            if (theme === "light") {
+                body.classList.add("bg-white", "text-black");
+                body.classList.remove("bg-gray-900", "text-white");
+                themeToggle.innerHTML = "☀️";
+            } else {
+                body.classList.add("bg-gray-900", "text-white");
+                body.classList.remove("bg-white", "text-black");
+                themeToggle.innerHTML = "🌙";
+            }
+            localStorage.setItem("theme", theme);
+        }
+
+        themeToggle.addEventListener("click", () => {
+            const newTheme = body.classList.contains("bg-gray-900") ? "light" : "dark";
+            setTheme(newTheme);
+        });
+
+        setTheme(localStorage.getItem("theme") || "dark");
+
+        // Password Visibility Toggle
+        document.getElementById("togglePassword").addEventListener("click", () => {
+            const passwordField = document.getElementById("password");
+            const eyeIcon = document.getElementById("eyeIcon");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.classList.add("stroke-current", "text-purple-500");
+            } else {
+                passwordField.type = "password";
+                eyeIcon.classList.remove("stroke-current", "text-purple-500");
+            }
+        });
+
+        // Particles.js - Bubble Effect
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 150, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 2, random: true },
+                move: { enable: true, speed: 1, direction: "none", random: true, out_mode: "out", straight: false },
+            },
+            interactivity: {
+                events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" } },
+                modes: { grab: { distance: 200, line_linked: { opacity: 1 } }, push: { particles_nb: 10 } },
+            },
+            retina_detect: true,
+        });
+    </script>
+
+</body>
+</html>

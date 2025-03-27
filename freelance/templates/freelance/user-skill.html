@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-3">{{ skills.name }}</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Skill Details</h5>
+            <p class="card-text"><strong>Description:</strong> {{ skills.description }}</p>
+            <p class="card-text"><strong>Country:</strong> {{ skills.county }}</p>
+            <p class="card-text"><strong>Level:</strong> {{ skills.created_by }}</p>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

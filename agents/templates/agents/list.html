@@ -1,0 +1,13 @@
+
+<h2>Available Agents</h2>
+<ul>
+    {% for agent in agents %}
+    <li>
+        <a href="{% url 'agents:agent-detagent-det' agent.slug %}">
+            {{ agent.names }}
+        </a> - {{ agent.email }}
+    </li>
+    {% empty %}
+    <p>No agents available at the moment.</p>
+    {% endfor %}
+</ul>

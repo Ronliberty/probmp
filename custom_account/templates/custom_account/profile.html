@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'account/css/profile.css' %}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a style="text-decoration: none;" href="{% url 'dashboard:user_dashboard' %}">
+                <h1>BMP</h1>
+            </a>
+        </div>
+        <ul class="navbar-links">
+            <li><a href="{% url 'dashboard:user_dashboard' %}">Home</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="left-section">
+            <h1>John</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section>
+                  <div class="right-section">
+                <div class="profile-picture">
+                    <img
+                        class="current-user-picture"
+                        src="{% static 'account/assets/try.jpg' %}"
+                        alt="User Picture"
+                        onclick="zoomImage(this)"
+                    >
+                    <button class="edit-button" onclick="redirectToEditProfile()">+</button>
+                    <li class="edit-link">
+                        <a style="text-decoration: none;" href="{% url 'custom_account:custom_account-settings' %}">
+                            <span class="edit">Edit Profile</span>
+                        </a>
+                    </li>
+                </div>
+            </div>
+
+            <div class="profile-container">
+                <p class="bio">
+                    [Your Name] is a dedicated professional with a passion for excellence and innovation. With expertise in [your field/industry], they bring a unique blend of creativity and problem-solving to every project. Known for their exceptional communication skills, proactive attitude, and commitment to quality, [Your Name] thrives in collaborative environments and consistently delivers results that exceed expectations. Outside of work, they enjoy [your hobbies or interests], which fuel their creativity and inspire their professional endeavors. Driven by a love for learning and a desire to make a positive impact, [Your Name] continuously seeks opportunities to grow and contribute meaningfully.
+                </p>
+                <h3>Contact Info</h3>
+                <p>Phone Number: 0796312453</p>
+                <p class="email">Email: wrldron@gmail.com</p>
+                <li class="edit-link">
+                    <a href="">
+                        <span style="text-decoration: none;" class="edit">Change Password</span>
+                    </a>
+                </li>
+            </div>
+        </section>
+    </main>
+<script>
+    function zoomImage(imageElement) {
+    const isZoomed = imageElement.classList.contains("zoomed");
+
+    // Toggle zoom class
+    if (isZoomed) {
+        imageElement.classList.remove("zoomed");
+    } else {
+        imageElement.classList.add("zoomed");
+    }
+}
+
+function redirectToEditProfile() {
+    window.location.href = "{% url 'custom_account:custom_account-settings' %}";
+}
+
+</script>
+</body>
+</html>

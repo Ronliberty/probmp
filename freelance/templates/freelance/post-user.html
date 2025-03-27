@@ -1,0 +1,44 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+        <button onclick="history.back()" class="btn-back">← Back</button>
+    <h2>{{ post.title }}</h2>
+
+    <p><strong>Status:</strong>
+        <span class="badge {% if post.status == 'published' %}bg-success{% else %}bg-secondary{% endif %}">
+            {{ post.status|capfirst }}
+        </span>
+    </p>
+    <p><strong>Created By:</strong> {{ post.created_by.username }}</p>
+    <p><strong>Created At:</strong> {{ post.created_at|date:"Y-m-d H:i" }}</p>
+    <p><strong>Description:</strong></p>
+    <p>{{ post.description }}</p>
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="Post Image" class="img-fluid mt-3">
+    {% endif %}
+
+    {% if post.link %}
+        <p><strong>External Link:</strong> <a href="{{ post.link }}" target="_blank">{{ post.link }}</a></p>
+    {% endif %}
+</div>
+<style>
+    .btn-back {
+        display: inline-block;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+    }
+</style>
+{% endblock %}

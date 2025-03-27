@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bms</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+        <link rel="icon" href="https://img.icons8.com/small/64/ffffff/fire-heart.png" type="image/png">
+        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+        <style>
+            /* Custom transition for smooth effects */
+            .footer-link {
+                transition: all 0.2s ease-in-out;
+            }
+        </style>
+    </head>
+
+<body x-data="{ sidebarOpen: false }">
+    <header class="bg-black text-white p-4 flex justify-between items-center">
+        <div class="flex items space-x-4">
+            <img src="https://img.icons8.com/small/64/ffffff/fire-heart.png" alt="logo" class="w-10 h-10">
+            <h1 class=" text-white text-lg font-semibold"><a href="{% url 'dashboard:user_dashboard' %}" class="hover:underline text-decoration-none">Bms</a></h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'custom_account:notify-settings' %}" class="text-gray-300 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+            </a>
+            <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open" class="text-gray-300 hover:text-white focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Option 1</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Option 2</a>
+                </div>
+            </div>
+            </div>
+        </div>
+        </header>
+        <div class="flex">
+            <div class="p-4">
+                <button @click="sidebarOpen = !sidebarOpen" class="text-gray-700 hover:text-gray-900 focus:outline-none mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+            <nav :class="sidebarOpen ? 'block' : 'hidden'" class="p-4 w-64 min-h-screen bg-gray-100 shadow-md" id="sidebar">
+                <button @click="sidebarOpen = false" class="text-gray-700 hover:text-gray-900 focus:outline-none mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+   <ul class="space-y-2 p-4 bg-gray-100 rounded-lg shadow-md">
+
+        <li>
+            <a href="{% url 'dashboard:user_dashboard' %}" class="flex items-center text-gray-700 hover:text-gray-900">
+                <i class='bx bx-home text-2xl mr-4'></i>
+                Home
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'custom_account:help-settings' %}" class="flex items-center text-gray-700 hover:text-gray-900">
+                <i class='bx bx-help-circle text-2xl mr-4'></i>
+                Help
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'custom_account:profile-settings' %}" class="flex items-center text-gray-700 hover:text-gray-900">
+                <i class='bx bx-user text-2xl mr-4'></i>
+                Edit Profile
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'custom_account:policy-settings' %}" class="flex items-center text-gray-700 hover:text-gray-900">
+                <i class='bx bx-file text-2xl mr-4'></i>
+                FAQs
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'logout' %}" class="flex items-center text-gray-700 hover:text-gray-900">
+                <i class='bx bx-log-out text-2xl mr-4'></i>
+                Logout
+            </a>
+        </li>
+    </ul>
+
+    <!-- Include Boxicons in your head section -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+                    </nav>
+                    <main class="p-4 flex-1">
+                        {% block content %}
+
+                         {% endblock %}
+
+                    </main>
+                    </div>
+                    <footer class="fixed bottom-0 left-0 right-0 bg-gray-800 p-2 flex justify-around items-center lg:hidden border-t border-gray-700">
+                        <!-- Home -->
+                        <a href="{% url 'dashboard:user_dashboard' %}" class="footer-link text-gray-400 hover:text-white flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-gray-700/50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span class="text-xs font-medium">Home</span>
+                        </a>
+
+                        <!-- Agents -->
+
+
+                        <!-- History -->
+                        <a href="{% url 'chat:chart' %}" class="footer-link text-gray-400 hover:text-white flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-gray-700/50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            <span class="text-xs font-medium">Chat</span>
+                        </a>
+
+                        <!-- Settings -->
+                        <a href="{% url 'custom_account:settings-menu' %}" class="footer-link text-gray-400 hover:text-white flex flex-col items-center gap-1 px-2 py-1 rounded-lg hover:bg-gray-700/50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="text-xs font-medium">Settings</span>
+                        </a>
+                    </footer>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                        const sidebar = document.getElementById('sidebar');
+                        const sidebarItems = document.querySelectorAll('#sidebar a');
+                        const mobileBreakpoint = 768; // Standard mobile breakpoint
+
+                        // Function to check mobile view
+                        function isMobile() {
+                            return window.innerWidth < mobileBreakpoint;
+                        }
+
+                        // Function to close sidebar
+                        function closeSidebar() {
+                            if (isMobile()) {
+                                sidebarOpen = false; // Update your state management here
+                                sidebar.classList.add('hidden');
+                                sidebar.classList.remove('block');
+                            }
+                        }
+
+                        // Close when clicking menu items
+                        sidebarItems.forEach(item => {
+                            item.addEventListener('click', closeSidebar);
+                        });
+
+                        // Close when clicking anywhere in the sidebar (except the close button)
+                        sidebar.addEventListener('click', function(event) {
+                            if (!event.target.closest('button')) { // Exclude close button
+                                closeSidebar();
+                            }
+                        });
+
+                        // Optional: Close sidebar when clicking outside on mobile
+                        document.addEventListener('click', function(event) {
+                            if (isMobile() && !sidebar.contains(event.target)) {
+                                closeSidebar();
+                            }
+                        });
+
+                        // Handle window resize
+                        window.addEventListener('resize', function() {
+                            if (!isMobile()) {
+                                // Optional: Re-open sidebar when resizing to desktop
+                                sidebarOpen = true;
+                                sidebar.classList.remove('hidden');
+                                sidebar.classList.add('block');
+                            }
+                        });
+                    });
+
+
+                        </script>
+    </body>
+</html>
+</body>
+</html>

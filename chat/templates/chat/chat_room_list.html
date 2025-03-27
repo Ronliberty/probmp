@@ -1,0 +1,10 @@
+{% extends 'dashboard/main.html' %}
+{% block content %}
+<h2>Available Chat Rooms</h2>
+<ul>
+    {% for room in rooms %}
+        <li>{{ room.name }}</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'chat:create_room' %}">Create a New Room</a>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'account/base.html' %}
+{% block content %}
+<section class="sett-main">
+        <div class="mainset-cont">
+
+          <!-- Change Bio Section -->
+          <form class="mainset-form" method="post">
+            <div class="mainset-bio">
+              <label for="bio" class="bio-label">Bio:</label><br>
+              <textarea id="bio" placeholder="Enter Your Bio" name="bio" class="bio-input"></textarea>
+            </div>
+            <button type="submit">Update Bio</button>
+          </form>
+
+          <!-- Change Password Section -->
+          <form class="mainset-form" method="post">
+            <div class="mainset-password">
+              <label for="password" class="password-label">New Password:</label>
+              <input type="password" id="password" name="password" placeholder="Enter New Password" class="password-input">
+            </div>
+            <div class="mainset-confirm-password">
+              <label for="confirm-password" class="confirm-password-label">Confirm Password:</label>
+              <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm New Password" class="confirm-password-input">
+            </div>
+            <button type="submit">Update Password</button>
+          </form>
+
+          <!-- Change Email Section -->
+          <form class="mainset-form" method="post">
+            <div class="mainset-email">
+              <label for="email" class="email-label">New Email:</label>
+              <input type="email" id="email" name="email" placeholder="Enter New Email" class="email-input">
+            </div>
+            <button type="submit">Update Email</button>
+          </form>
+
+          <!-- Change Profile Picture Section -->
+          <form class="mainset-form" method="post" enctype="multipart/form-data">
+            <div class="mainset-pic">
+              <label for="profile-pic" class="pic-label">Select Profile Picture:</label>
+              <input type="file" id="profile-pic" name="profile-pic" class="pic-input">
+            </div>
+            <button type="submit">Update Profile Picture</button>
+          </form>
+
+        </div>
+      </section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bms_Bmp</title>
+    <link rel="stylesheet" href="{% static 'account/css/notification.css' %}">
+
+</head>
+<body>
+    <header class="header">
+        <h1>Notifications</h1>
+    </header>
+    <div class="main-header">
+        <div class="">
+            <a href="{% url 'dashboard:user_dashboard' %}" style="text-decoration: none; color: black; margin-left: 1rem; margin-right: 24px;">Home</a>
+         </div>
+        <nav class="not-links">
+            <li><a href="#"></a>All</li>
+            <li><a href="#"></a>Recent</li>
+            <li><a href="#"></a>Updates</li>
+        </nav>
+    </div>
+
+</body>
+</html>

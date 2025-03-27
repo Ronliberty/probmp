@@ -1,0 +1,97 @@
+{% extends 'dashboard/main.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Post List</h1>
+    <a href="{% url 'freelance:post-create' %}" class="btn btn-primary mb-3">Create New Post</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Country</th>
+                <th>Status</th>
+                <th>Created By</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="postContainer">
+            {% for post in posts %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.country|default:"N/A" }}</td>
+                <td>
+                    <span class="badge {% if post.status == 'published' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ post.status|capfirst }}
+                    </span>
+                </td>
+                <td>{{ post.created_by.username }}</td>
+                <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <a href="{% url 'freelance:post-det' post.slug %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'freelance:delete-post' post.slug %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No posts available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function fetchPosts() {
+        $.ajax({
+            url: "{% url 'freelance:post-list' %}",  // Ensure it matches your URL pattern
+            type: "GET",
+            dataType: "json",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",  // Secure AJAX request
+            },
+            success: function(response) {
+                $("#postContainer").empty();  // Clear existing posts
+                if (response.posts.length === 0) {
+                    $("#postContainer").append(
+                        `<tr><td colspan='7' class='text-center'>No posts available.</td></tr>`
+                    );
+                } else {
+                    $.each(response.posts, function(index, post) {
+                        let statusClass = post.status === 'published' ? 'bg-success' : 'bg-secondary';
+                        let postRow = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${post.title}</td>
+                                <td>${post.country}</td>
+                                <td><span class="badge ${statusClass}">${post.status.charAt(0).toUpperCase() + post.status.slice(1)}</span></td>
+                                <td>${post.created_by}</td>
+                                <td>${post.created_at}</td>
+                                <td>
+                                    <a href="/freelance/post/${post.slug}/" class="btn btn-info btn-sm">View</a>
+                                    <a href="/freelance/post/${post.slug}/delete/" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                            </tr>
+                        `;
+                        $("#postContainer").append(postRow);
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching posts:", error);
+            }
+        });
+    }
+
+    // Fetch posts automatically every 5 seconds
+    $(document).ready(function() {
+        setInterval(fetchPosts, 5000); // 5000ms = 5 seconds
+    });
+</script>
+
+{% endblock %}

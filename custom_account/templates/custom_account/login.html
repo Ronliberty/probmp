@@ -1,0 +1,25 @@
+
+{% load i18n %}
+{% load crispy_forms_filters %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+
+<div class="text-center">
+    <h1>{% trans "Sign In" %}</h1>
+    <p>Don't have an account? <a href="{% url 'custom_account:account_signup' %}">Sign up</a>.</p>
+</div>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-grid mt-3">
+                <button class="btn btn-dark" type="submit">{% trans "Sign In" %}</button>
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+        </div>
+    </div>
+</div>

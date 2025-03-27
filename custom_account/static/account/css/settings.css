@@ -1,0 +1,458 @@
+/* Define root variables for reusable values */
+:root {
+    --font-family: 'Roboto', Arial, sans-serif;
+    --primary-bg: rgb(248, 248, 248);
+    --header-bg: white;
+    --border-color: rgb(228, 228, 228);
+    --hover-color: blue;
+    --text-color: black;
+    --placeholder-color: rgb(192, 192, 192);
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--primary-bg);
+    overflow: hidden;
+    overflow-x: hidden;
+    height: 100vh;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3rem;
+    padding: 0 2rem;
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 10;
+  }
+
+  .left-section {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-link {
+    text-decoration: none;
+    color: var(--text-color);
+  }
+
+  .logo-name {
+    cursor: pointer;
+  }
+
+  .logo-name:hover {
+    color: var(--hover-color);
+  }
+
+
+
+  .right-section {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    margin-left: auto; /* Pushes the right-section to the far-right */
+    padding-right: 6%; /* Ensure there's no unnecessary padding */
+}
+  .icon-settings {
+    display: flex;
+    gap: 5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .icon-settings .home-link {
+    color: var(--text-color);
+  }
+
+  .icon-settings .home-link:hover {
+    color: var(--hover-color);
+  }
+
+
+  .sidebar {
+    position: fixed;
+    top: 3rem;
+    left: 0;
+    height: calc(100vh - 3rem);
+    width: 15rem;
+    background-color: var(--header-bg);
+    border-right: 1px solid var(--border-color);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .sidebar-link {
+    display: block;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-family);
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: center;
+    border-radius: 0.5rem;
+    background-color: aliceblue;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .sidebar-link:hover {
+    background-color: rgb(235, 235, 235);
+  }
+  .sett-main {
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    padding: 8rem;
+    margin-left: 4rem;
+    overflow: hidden;
+    height: auto;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+
+  .mainset-cont {
+    background-color: #fff;
+    width: 90%;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 1rem rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .mainset-form {
+    width: 80%;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+  }
+
+  .mainset-bio, .mainset-phone, .mainset-pic {
+    margin-bottom: 2rem;
+  }
+
+  .bio-label, .phone-label, .pic-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #444;
+  }
+
+  .bio-input, .phone-input, .pic-input {
+    width: 90%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+  }
+
+  .bio-input {
+    height: 8rem;
+    resize: none;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .bio-input:focus, .phone-input:focus, .pic-input:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0.7rem rgba(108, 99, 255, 0.5);
+    background-color: #fff;
+  }
+
+  input[type="tel"] {
+    font-size: 1rem;
+  }
+
+  input[type="file"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+    color: #555;
+  }
+
+  input:hover, input:focus {
+    border-color: #6c63ff;
+    outline: none;
+  }
+/*
+body {
+    overflow-x: hidden;
+    font-family: Roboto, Arial;
+    margin: 0;
+    padding-top: 80px;
+    padding-left: 96px;
+    padding-right: 24px;
+    background-color: rgb(248, 248, 248);
+  } */
+
+.bio {
+ background-color: white;
+  font-family: Roboto, Arial, sans-serif;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  width: 45rem;
+  border-radius: 0.5rem;
+  border: 0.5em;
+  color: #0f0f0f;
+}
+
+.email{
+
+  font-family: Roboto, Arial, sans-serif;
+  font-weight: 200;
+}
+.profile-picture{
+  display: flex;
+  justify-content: space-between;
+  margin-right: 15rem;
+  margin-top: 5rem;
+  }
+  .current-user-picture{
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+  }
+  .edit-link {
+    list-style: none;
+  }
+
+  .edit {
+    color:yellow;
+    background-color: grey;
+    border: 0.5em;
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.2rem;
+    cursor: pointer;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  }
+  .edit:hover {
+    color: red;
+    background-color: black;
+  }
+  .header{
+    height: 55px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: white;
+    border-bottom: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(228, 228, 228);
+    font-family: Roboto, Arial;
+
+  }
+
+  .left-section{
+    display: flex;
+    align-items: center;
+
+  }
+  .back-btn {
+    color: red;
+  }
+  /* .right-section{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: red;
+    list-style: none;
+    cursor: pointer;
+  } */
+
+  .mainset-password,
+.mainset-confirm-password,
+.mainset-email,
+.mainset-profile {
+    margin-bottom: 2rem;
+}
+
+/* Labels for the new fields */
+.password-label,
+.confirm-password-label,
+.email-label,
+.profile-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #444;
+}
+
+/* Inputs and Textarea styling */
+.password-input,
+.confirm-password-input,
+.email-input,
+.profile-input {
+    width: 90%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.profile-input {
+    height: 8rem;
+    resize: none;
+    font-family: 'Arial', sans-serif;
+}
+
+.password-input:focus,
+.confirm-password-input:focus,
+.email-input:focus,
+.profile-input:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0.7rem rgba(108, 99, 255, 0.5);
+    background-color: #fff;
+}
+
+/* Submit button styling */
+button[type="submit"] {
+    background-color: #6c63ff;
+    color: #fff;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #5750d4;
+}
+/* .mainset-form {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    max-height: 80vh;
+  } */
+  .mainset-form {
+    width: 80%;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    max-height: 80vh; /* Limit the form's height to prevent excessive scrolling */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
+  button[type="submit"] {
+    background-color: #6c63ff;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #5750d4;
+  }
+
+
+/* Responsive styling */
+@media screen and (max-width: 768px) {
+    .mainset-form {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .password-input,
+    .confirm-password-input,
+    .email-input,
+    .profile-input {
+        width: 100%;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+    }
+}
+
+
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .header {
+      flex-wrap: wrap;
+      height: auto;
+      padding: 1rem;
+    }
+
+
+
+    .icon-settings {
+      gap: 1rem;
+    }
+
+
+
+  /* CSS */
+
+
+       .current-user-picture {
+        width: 100px; /* Set the size of the image */
+        height: 100px; /* Make it square */
+        border-radius: 50%; /* Make the image circular */
+        border: 3px solid #f0f0f0; /* Add a subtle border */
+        object-fit: cover; /* Ensure the image fits perfectly in the circle */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    }
+
+    .current-user-picture:hover {
+        transform: scale(1.1); /* Slightly enlarge the image on hover */
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Enhance the shadow on hover */
+    }
+
+
+
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: static;
+      padding: 0.5rem;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .header {
+      padding: 0.5rem;
+    }
+
+
+
+    .icon-settings {
+      gap: 0.5rem;
+    }
+
+    .current-user-picture {
+      height: 1.8rem;
+      width: 1.8rem;
+    }
+  }

@@ -1,0 +1,43 @@
+<div class="container mx-auto px-4 mt-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Service List</h1>
+<div class="relative">
+            <button id="dropdownCreateButton" data-dropdown-toggle="dropdownCreate" class="flex items-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center" type="button">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+               Add New Step
+            </button>
+
+            <!-- Dropdown menu -->
+            <div id="dropdownCreate" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow">
+                <ul class="py-1 text-sm text-gray-700" aria-labelledby="dropdownCreateButton">
+                    <li>
+                <a href=""
+                   class="flex items-center text-gray-700 hover:text-gray-900 gap-4"
+                   hx-get="{% url 'base:step-create' %}"
+                   hx-target="#content-container"
+                   hx-trigger="click"
+                   hx-push-url="true">
+                    <i class='bx bx-briefcase text-2xl'></i>
+                    Steps
+                </a>
+            </li>
+                </ul>
+            </div>
+        </div>
+
+
+<ul class="mt-6">
+    {% for step in steps %}
+        <li class="mb-2">
+            <a href="{% url 'base:step-detail' step.slug %}" class="text-green-600 hover:underline">{{ step.title }}</a>
+        </li>
+    {% empty %}
+        <p>No steps available.</p>
+    {% endfor %}
+</ul>
+
+<script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>
+    </div>
+</div>

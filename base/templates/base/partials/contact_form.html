@@ -1,0 +1,31 @@
+<div class="bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto relative">
+              <button onclick="closeEmailForm()" class="absolute top-4 right-4 text-gray-700 hover:text-gray-900">
+                &times;
+              </button>
+              <h3 class="text-2xl font-bold text-blue-600 mb-4">Send Us a Message</h3>
+
+                {% csrf_token %}
+                 <div>
+                    <input type="text"  name="{{ form.name.name }}"  id="{{ form.name.id_for_label }}"  placeholder="Your Name"  value="{{ form.name.value|default:'' }}" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required />
+                     {% if form.name.errors %}
+                    <div class="text-red-500 text-sm mt-1">{{ form.name.errors }}</div>
+                    {% endif %}
+                    </div>
+                </div>
+                <div>
+                 <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" placeholder="Your Email" value="{{ form.email.value|default:'' }}" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required />
+                     {% if form.email.errors %}
+                        <div class="text-red-500 text-sm mt-1">{{ form.email.errors }}</div>
+                        {% endif %}
+                         </div>
+                    </div>
+                <textarea name="{{ form.message.name }}"  id="{{ form.message.id_for_label }}" placeholder="Your Message" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>{{ form.message.value|default:'' }}</textarea>
+                     {% if form.message.errors %}
+                        <div class="text-red-500 text-sm mt-1">{{ form.message.errors }}</div>
+                        {% endif %}
+                    </div>
+                <button type="submit" class="w-full bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition duration-300">
+                  Send Message
+                </button>
+              </form>
+            </div>

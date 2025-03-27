@@ -1,0 +1,14 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Request Details</h2>
+    <p><strong>Service:</strong> {{ requests.service.name }}</p>
+    <p><strong>Description:</strong> {{ requests.description }}</p>
+    <p><strong>Status:</strong> {{ requests.status }}</p>
+    <p><strong>Requested At:</strong> {{ requests.created_at }}</p>
+
+    <a href="{% url 'service:delete-request' requests.slug %}" class="btn btn-danger">Delete Request</a>
+    <a href="{% url 'service:request-list' %}" class="btn btn-secondary">Back to Requests</a>
+</div>
+{% endblock %}

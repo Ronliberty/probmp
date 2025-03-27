@@ -1,0 +1,28 @@
+{% extends 'dashboard/main.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ post.title }}</h2>
+    <p><strong>Country:</strong> {{ post.country|default:"N/A" }}</p>
+    <p><strong>Status:</strong>
+        <span class="badge {% if post.status == 'published' %}bg-success{% else %}bg-secondary{% endif %}">
+            {{ post.status|capfirst }}
+        </span>
+    </p>
+    <p><strong>Created By:</strong> {{ post.created_by.username }}</p>
+    <p><strong>Created At:</strong> {{ post.created_at|date:"Y-m-d H:i" }}</p>
+    <p><strong>Description:</strong></p>
+    <p>{{ post.description }}</p>
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="Post Image" class="img-fluid mt-3">
+    {% endif %}
+
+    {% if post.link %}
+        <p><strong>External Link:</strong> <a href="{{ post.link }}" target="_blank">{{ post.link }}</a></p>
+    {% endif %}
+
+    <a href="{% url 'freelance:list-post' %}" class="btn btn-secondary">Back to List</a>
+    <a href="{% url 'freelance:delete-post' post.slug %}" class="btn btn-danger">Delete Post</a>
+</div>
+{% endblock %}

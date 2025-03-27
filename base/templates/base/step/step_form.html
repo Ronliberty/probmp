@@ -1,0 +1,16 @@
+
+<h2 class="text-2xl font-bold mb-4">{% if form.instance.pk %}Edit Step{% else %}Create Step{% endif %}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+</form>
+
+
+
+    <a href=""
+    hx-get="{% url 'base:step-list' %}"
+                   hx-target="#content-container"
+                   hx-trigger="click"
+                   hx-push-url="true">Cancel</a>

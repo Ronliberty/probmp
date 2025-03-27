@@ -1,0 +1,10 @@
+<ul id="message-list">
+    {% for msg in messages %}
+        <li>
+            <strong>{{ msg.sender.username }}</strong>: {{ msg.content }}
+            <span class="timestamp">{{ msg.timestamp|date:"H:i" }}</span>
+        </li>
+    {% empty %}
+        <li>No messages yet</li>
+    {% endfor %}
+</ul>

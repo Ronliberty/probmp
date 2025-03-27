@@ -1,0 +1,82 @@
+body {
+
+    font-family: Roboto, Arial;
+    margin: 0;
+    padding-top: 80px;
+    padding-left: 1rem;
+    padding-right: 24px;
+    background-color: rgb(248, 248, 248);
+  }
+  .header{
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: white;
+    border-bottom: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(228, 228, 228);
+    font-family: Roboto, Arial;
+  }
+
+.header h1 {
+  margin-left: 1rem;
+}
+
+  .not-links {
+    display: flex;
+    color: black;
+    justify-content: space-evenly;
+    list-style: none;
+    cursor: pointer;
+    border-bottom: 2px solid black;
+    padding-bottom: 1rem;
+  }
+
+  .all:hover {
+    text-decoration: underline;
+  }
+
+  .recent:hover {
+    text-decoration: underline;
+  }
+
+  .update:hover {
+    text-decoration: underline;
+  }
+
+  .back {
+    text-decoration: none;
+    color: black;
+  }
+
+  .bx {
+    font-size: 1rem;
+    margin-right: 1rem;
+  }
+
+.notifications {
+  font-family: Arial, Helvetica, sans-serif;
+  border-bottom: 1px solid #333;
+  padding-bottom: 3rem;
+  padding-top: 2rem;
+}
+
+.details {
+margin-left: 2rem;
+}
+
+.date {
+  text-align: right;
+  margin-right: 1rem;
+}
+
+.time {
+  text-align: right;
+  margin-right: 1rem;
+}

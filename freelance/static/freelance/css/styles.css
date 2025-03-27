@@ -1,0 +1,130 @@
+/* Overall body margin reset for full-page layout */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Adjustments to the navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* Adjust the height of the navbar */
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000; /* Keep navbar on top */
+}
+
+/* Sidebar adjustments */
+.sidebar {
+    position: fixed;
+    top: 60px; /* Below the navbar */
+    left: 0;
+    width: 250px; /* Width of the sidebar */
+    height: 100%;
+    background-color: #f4f4f4;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding-top: 20px;
+    z-index: 999; /* Keep sidebar below the navbar */
+}
+
+/* Main content area adjustment */
+.main-content {
+    margin-left: 250px; /* Offset for the sidebar */
+    padding-top: 80px; /* Space for the navbar */
+    padding-bottom: 40px; /* Space for footer or other content */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* bms-post container for main content */
+.bms-post {
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    align-items: flex-start; /* Align items to the top */
+    padding: 20px;
+    padding-top: 30px; /* Adjust padding top to avoid overlap with navbar */
+    padding-bottom: 30px;
+    margin-left: 250px; /* Space for sidebar */
+    width: 100%; /* Full width */
+}
+
+/* Ensure the post item remains centered and fits within the content */
+.post-item {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 0 auto; /* Center the post-item horizontally */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Limit max width */
+    width: 100%; /* Allow it to shrink for smaller screens */
+}
+
+/* Ensure iframe and content inside post-item is centered */
+iframe {
+    display: block;
+    margin: 0 auto; /* Center iframe horizontally */
+    border-radius: 5px;
+    width: 80%;
+    height: 600px;
+    border: none;
+}
+
+/* Button styles */
+.btn-click {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-click:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    /* Reset sidebar margin and padding on small screens */
+    .bms-post {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    /* Allow full width of .post-item on smaller screens */
+    .post-item {
+        max-width: 100%;
+    }
+
+    iframe {
+        width: 100%;
+        height: 300px; /* Adjust iframe size for small screens */
+    }
+
+    /* Adjust button size for mobile */
+    .btn-click {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+}
+
+/* Further adjustment for very small screens */
+@media (max-width: 480px) {
+    /* Further reduce padding and sizes for very small screens */
+    .post-item {
+        padding: 10px;
+    }
+
+    iframe {
+        height: 200px; /* Smaller iframe for tiny screens */
+    }
+}

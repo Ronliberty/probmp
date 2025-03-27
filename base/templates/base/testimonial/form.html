@@ -1,0 +1,70 @@
+<!-- templates/testimonials/partials/testimonial_form.html -->
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg border border-gray-100">
+    <form method="post"
+          {% if object %}hx-post="{% url 'base:testimonial-update' testimonial.slug %}"{% else %}hx-post="{% url 'base:testimonial-create' %}"{% endif %}
+          hx-target="#content-container"
+          hx-swap="outerHTML"
+          class="space-y-6">
+        {% csrf_token %}
+
+        <div class="space-y-6">
+            <div class="border-b border-gray-200 pb-4">
+                <h2 class="text-2xl font-bold text-gray-900">
+                    {% if object %}Edit{% else %}Create New{% endif %} Testimonial
+                </h2>
+            </div>
+
+            <div class="space-y-6">
+                {% for field in form %}
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">
+                        {{ field.label_tag }}
+                    </label>
+
+                    <div class="mt-1 relative">
+                        {{ field }}
+
+                        {% if field.errors %}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if field.help_text %}
+                    <p class="mt-1 text-sm text-gray-500 italic">{{ field.help_text }}</p>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                    <p class="mt-1 text-sm text-red-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                <button type="button"
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        hx-get="{% url 'base:testimonial-list' %}"
+                        hx-target="#content-container">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    {% if object %}Update{% else %}Create{% endif %} Testimonial
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

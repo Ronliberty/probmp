@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+    <!-- Back button -->
+    <a href="javascript:history.back()" class="btn btn-secondary mb-3">← Back</a>
+
+    <div class="news-detail" style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 10px;">{{ news_list.headline }}</h1>
+        <div class="meta" style="margin-bottom: 15px;">
+            <p style="font-size: 0.9rem; color: #555;">
+                By {{ news_list.created_by.get_full_name|default:news_list.created_by.username }} &mdash;
+                {{ news_list.created_at|date:"F j, Y" }}
+            </p>
+        </div>
+        <div class="content" style="font-size: 1rem; color: #333; line-height: 1.6;">
+            {{ news_list.content|linebreaks }}
+        </div>
+    </div>
+
+{% endblock %}
