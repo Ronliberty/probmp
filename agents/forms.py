@@ -4,7 +4,7 @@ from .models import OurAgent, AgentImage
 class OurAgentForm(forms.ModelForm):
     class Meta:
         model = OurAgent
-        fields = ['names', 'portfolio', 'email', 'social_links', 'phone_number', 'bio', 'slug', 'active']
+        fields = ['names', 'portfolio', 'email', 'social_links', 'phone_number', 'bio', 'active']
 
 class AgentImageForm(forms.ModelForm):
     class Meta:

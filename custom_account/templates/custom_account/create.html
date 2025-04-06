@@ -1,0 +1,116 @@
+<form method="post" hx-post="{% url 'custom_account:users-create' %}" hx-target="#users-table" hx-swap="outerHTML" class="space-y-4">
+    {% csrf_token %}
+
+    <!-- Email Field -->
+    <div>
+        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email"
+               name="{{ form.email.name }}"
+               id="{{ form.email.id_for_label }}"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+               value="{{ form.email.value|default:'' }}">
+        {% if form.email.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.email.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- First Name Field -->
+    <div>
+        <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">First Name</label>
+        <input type="text"
+               name="{{ form.first_name.name }}"
+               id="{{ form.first_name.id_for_label }}"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+               value="{{ form.first_name.value|default:'' }}">
+        {% if form.first_name.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.first_name.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Last Name Field -->
+    <div>
+        <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Last Name</label>
+        <input type="text"
+               name="{{ form.last_name.name }}"
+               id="{{ form.last_name.id_for_label }}"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+               value="{{ form.last_name.value|default:'' }}">
+        {% if form.last_name.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.last_name.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Phone Number Field -->
+    <div>
+        <label for="{{ form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700">Phone Number</label>
+        <input type="tel"
+               name="{{ form.phone_number.name }}"
+               id="{{ form.phone_number.id_for_label }}"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border"
+               value="{{ form.phone_number.value|default:'' }}">
+        {% if form.phone_number.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.phone_number.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Country Field -->
+    <!-- Country Field -->
+<div>
+    <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium text-gray-700">Country</label>
+    <select name="{{ form.country.name }}"
+            id="{{ form.country.id_for_label }}"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border">
+        {% for value, label in form.fields.country.choices %}
+            <option value="{{ value }}" {% if form.country.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+    {% if form.country.errors %}
+        <div class="mt-1 text-sm text-red-600">
+            {{ form.country.errors }}
+        </div>
+    {% endif %}
+</div>
+
+    <!-- Is Active Field -->
+    <div class="flex items-center">
+        <input type="checkbox"
+               name="{{ form.is_active.name }}"
+               id="{{ form.is_active.id_for_label }}"
+               class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+               {% if form.is_active.value %}checked{% endif %}>
+        <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm text-gray-700">Is Active</label>
+        {% if form.is_active.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.is_active.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Password Field -->
+    <div>
+        <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password"
+               name="{{ form.password.name }}"
+               id="{{ form.password.id_for_label }}"
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2 border">
+        {% if form.password.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.password.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+        Create User
+    </button>
+</form>

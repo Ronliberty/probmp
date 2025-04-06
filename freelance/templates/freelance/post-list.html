@@ -1,9 +1,12 @@
-{% extends 'dashboard/main.html' %}
 
-{% block content %}
 <div class="container mt-4">
     <h1 class="mb-4">Post List</h1>
-    <a href="{% url 'freelance:post-create' %}" class="btn btn-primary mb-3">Create New Post</a>
+    <a href=""
+       hx-get="{% url 'freelance:post-create' %}"
+                        hx-target="#content-container"
+                        hx-trigger="click"
+                        hx-push-url="true"
+       class="btn btn-primary mb-3">Create New Post</a>
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -94,4 +97,4 @@
     });
 </script>
 
-{% endblock %}
+

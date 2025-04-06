@@ -1,5 +1,186 @@
 {% extends 'dashboard/layout.html' %}
 
 {% block content %}
-<h1>Super user</h1>
+<div id="content-container">
+    <!-- Financial Section -->
+    <div class="p-6 space-y-6">
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                <h3 class="font-semibold mb-4 dark:text-white">Revenue vs Expenses</h3>
+                <div class="h-80">
+                    <canvas id="profitChart"
+                            data-revenue="{{ revenue_vs_expenses.revenue }}"
+                            data-expenses="{{ revenue_vs_expenses.expenses }}"></canvas>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                <h3 class="font-semibold mb-4 dark:text-white">Monthly Profit</h3>
+                <div class="h-80">
+                    <canvas id="monthlyProfitChart"
+                            data-months="{{ months|join:',' }}"
+                            data-profit="{{ monthly_profit|join:',' }}"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Total Revenue</p>
+                        <p class="text-2xl font-bold dark:text-white">${{ total_revenue|floatformat:2 }}</p>
+                    </div>
+                    <i class='bx bx-line-chart text-3xl text-purple-600'></i>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Total Expenses</p>
+                        <p class="text-2xl font-bold dark:text-white">${{ total_expenses|floatformat:2 }}</p>
+                    </div>
+                    <i class='bx bx-money-withdraw text-3xl text-red-600'></i>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Net Profit</p>
+                        <p class="text-2xl font-bold dark:text-white">${{ net_profit|floatformat:2 }}</p>
+                    </div>
+                    <i class='bx bx-trending-up text-3xl text-green-600'></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                <!-- User Management -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold dark:text-white">User Administration</h2>
+                        <div class="flex space-x-4">
+                           <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
+                            hx-post="{% url 'custom_account:users-create' %}"
+                            hx-target="#content-container"
+                            hx-trigger="click"
+                            hx-push-url="true">
+                        <i class='bx bx-user-plus mr-2'></i> Add User
+                    </button>
+
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="text-sm text-gray-500 dark:text-gray-400 border-b dark:border-gray-700">
+                                <tr>
+                                    <th class="pb-3 text-left">User</th>
+                                    <th class="pb-3 text-left">Role</th>
+                                    <th class="pb-3 text-left">Last Activity</th>
+                                    <th class="pb-3 text-left">Status</th>
+                                    <th class="pb-3 text-left">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm dark:text-gray-300">
+                                     {% for user in users %}
+                                <template x-for="user in users" :key="user.id">
+                                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                        <td>{{ user.get_full_name|default:user.username }}</td>
+                                    <td>{% if user.is_superuser %}Superuser{% elif user.is_staff %}Staff{% else %}User{% endif %}</td>
+                                    <td>{{ user.last_login|date:"M d, Y H:i" }}</td>
+                                    <td>
+                                        <span class="px-2 py-1 rounded-full text-xs
+                                            {% if user.is_active %}
+                                                bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
+                                            {% else %}
+                                                bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300
+                                            {% endif %}">
+                                            {% if user.is_active %}active{% else %}idle{% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="flex space-x-2">
+                                        <button class="text-purple-600 hover:text-purple-700"><i class='bx bx-edit'></i></button>
+                                        <button class="text-red-600 hover:text-red-700"><i class='bx bx-trash'></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </template>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Revenue vs Expenses Chart
+    const profitCtx = document.getElementById('profitChart').getContext('2d');
+    const profitChart = new Chart(profitCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Revenue', 'Expenses'],
+            datasets: [{
+                label: 'Amount ($)',
+                data: [
+                    parseFloat(document.getElementById('profitChart').dataset.revenue),
+                    parseFloat(document.getElementById('profitChart').dataset.expenses)
+                ],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 99, 132, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Monthly Profit Chart
+    const monthlyCtx = document.getElementById('monthlyProfitChart').getContext('2d');
+    const months = document.getElementById('monthlyProfitChart').dataset.months.split(',');
+    const profitData = document.getElementById('monthlyProfitChart').dataset.profit.split(',').map(Number);
+
+    const monthlyChart = new Chart(monthlyCtx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Profit ($)',
+                data: profitData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+});
+</script>
+
 {% endblock %}

@@ -1,10 +1,7 @@
-{% extends 'dashboard/main.html' %}
-
-{% block content %}
 
 <div class="container mt-4">
     <h1 class="mb-4">News Articles</h1>
-    <a href="{% url 'freelance:news-create' %}" class="btn btn-primary mb-3">Create New News</a>
+    <a href="" class="btn btn-primary mb-3">Create New News</a>
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -26,8 +23,8 @@
                 <td>{{ news.country|default:"N/A" }}</td>
                 <td>{{ news.content|truncatewords:20 }}</td>
                 <td>
-                    <a href="{% url 'freelance:news-det' news.slug %}" class="btn btn-info btn-sm">View</a>
-                    <a href="{% url 'freelance:delete-news' news.slug %}" class="btn btn-danger btn-sm">Delete</a>
+                    <a href="" class="btn btn-info btn-sm">View</a>
+                    <a href="" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
             {% empty %}
@@ -38,4 +35,4 @@
         </tbody>
     </table>
 </div>
-{% endblock %}
+

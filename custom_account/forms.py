@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import Group
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import get_user_model
 from allauth.account.forms import SignupForm
@@ -31,3 +32,10 @@ class CustomUserLoginForm(AuthenticationForm):
         max_length=255,
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'})
     )
+class CustomUserCreateForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False)
+
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'first_name', 'last_name', 'phone_number', 'country', 'is_active', 'password']

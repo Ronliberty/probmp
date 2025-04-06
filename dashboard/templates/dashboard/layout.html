@@ -8,6 +8,7 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/htmx.org"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script>
         tailwind.config = {
@@ -156,34 +157,49 @@
 
                 <!-- Navigation Menu -->
                 <nav class="space-y-2">
-                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
+                    <a href="{% url 'dashboard:super-dash' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
                        :class="sidebarOpen || 'justify-center'">
                         <i class='bx bx-shield-alt text-xl'></i>
                         <span x-show="sidebarOpen">Dashboard</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
+                    <a href=""
+                       hx-get="{% url 'payment:finances' %}"
+                        hx-target="#content-container"
+                        hx-trigger="click"
+                        hx-push-url="true"class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
                        :class="sidebarOpen || 'justify-center'">
                         <i class='bx bx-line-chart text-xl'></i>
                         <span x-show="sidebarOpen">Financials</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
+                    <a  href=""
+                        hx-get="{% url 'custom_account:users-list' %}"
+                        hx-target="#content-container"
+                        hx-trigger="click"
+                        hx-push-url="true"
+                                            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
                        :class="sidebarOpen || 'justify-center'">
                         <i class='bx bx-group text-xl'></i>
                         <span x-show="sidebarOpen">Users</span>
                     </a>
-                    <a href="{% url 'partner:partner-list' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
+                    <a href=""
+                        hx-get="{% url 'agents:agent-create' %}"
+                        hx-target="#content-container"
+                        hx-trigger="click"
+                        hx-push-url="true"
+                       class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
                        :class="sidebarOpen || 'justify-center'">
                         <i class='bx bx-cog text-xl'></i>
                         <span x-show="sidebarOpen">Agents</span>
-                    <a href="{% url 'partner:partner-list' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
+                    <a href=""
+                       hx-get="{% url 'partner:partnership-list' %}"
+                        hx-target="#content-container"
+                        hx-trigger="click"
+                        hx-push-url="true"
+                       class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
                     :class="sidebarOpen || 'justify-center'">
                      <i class='bx bx-group text-xl'></i>
                      <span x-show="sidebarOpen">Partnerships</span>
                  </a>
-                    <a href="{% url 'custom_account:custom_account-settings' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-600/20 text-purple-100"
-                       :class="sidebarOpen || 'justify-center'">
-                        <i class='bx bx-cog text-xl'></i>
-                        <span x-show="sidebarOpen">Settings</span>
                     </a>
                 </nav>
             </div>
@@ -237,106 +253,7 @@
                 {% block content %}
                 {% endblock %}
                 </section>
-            <!-- Financial Section -->
-            <div class="p-6 space-y-6">
-                <!-- Charts -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                        <h3 class="font-semibold mb-4 dark:text-white">Revenue vs Expenses</h3>
-                        <div class="h-80">
-                            <canvas id="profitChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                        <h3 class="font-semibold mb-4 dark:text-white">Monthly Profit</h3>
-                        <div class="h-80">
-                            <canvas id="monthlyProfitChart"></canvas>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Financial Summary -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Total Revenue</p>
-                                <p class="text-2xl font-bold dark:text-white">$284k</p>
-                            </div>
-                            <i class='bx bx-line-chart text-3xl text-purple-600'></i>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Total Expenses</p>
-                                <p class="text-2xl font-bold dark:text-white">$142k</p>
-                            </div>
-                            <i class='bx bx-money-withdraw text-3xl text-red-600'></i>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Net Profit</p>
-                                <p class="text-2xl font-bold dark:text-white">$141k</p>
-                            </div>
-                            <i class='bx bx-trending-up text-3xl text-green-600'></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- User Management -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-xl font-semibold dark:text-white">User Administration</h2>
-                        <div class="flex space-x-4">
-                            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
-                                <i class='bx bx-user-plus mr-2'></i> Add User
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="text-sm text-gray-500 dark:text-gray-400 border-b dark:border-gray-700">
-                                <tr>
-                                    <th class="pb-3 text-left">User</th>
-                                    <th class="pb-3 text-left">Role</th>
-                                    <th class="pb-3 text-left">Last Activity</th>
-                                    <th class="pb-3 text-left">Status</th>
-                                    <th class="pb-3 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm dark:text-gray-300">
-                                <template x-for="user in users" :key="user.id">
-                                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <td x-text="user.name"></td>
-                                        <td x-text="user.role"></td>
-                                        <td x-text="user.lastActive"></td>
-                                        <td>
-                                            <span class="px-2 py-1 rounded-full text-xs"
-                                                  :class="{
-                                                    'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300': user.status === 'active',
-                                                    'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300': user.status === 'idle'
-                                                  }"
-                                                  x-text="user.status"></span>
-                                        </td>
-                                        <td class="flex space-x-2">
-                                            <button class="text-purple-600 hover:text-purple-700">
-                                                <i class='bx bx-edit'></i>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-700">
-                                                <i class='bx bx-trash'></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
             <!-- Mobile Footer -->
             <footer class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-t-lg md:hidden z-40">

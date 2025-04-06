@@ -1,5 +1,6 @@
 from msilib.schema import ListView
-
+from django.template.loader import render_to_string
+from django.http import HttpResponseForbidden
 from allauth.account.models import Login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
@@ -10,6 +11,8 @@ from django.template.loader import render_to_string
 from .models import Post, News, Tool, Skill
 from .forms import PostForm, NewsForm, ToolForm, SkillForm
 # Create your views here.
+
+
 class PostView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'freelance/post.html'
@@ -178,8 +181,14 @@ class NewsListView(LoginRequiredMixin, ListView):
             return News.objects.all()
         return News.objects.none()
 
-    def test_func(self):
-        return self.request.user.groups.filter(name='manager').exists()
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string('custom_account/errors/htmx_only.html',
+                                 context,
+                                 request=self.request)
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class NewsDeleteView(LoginRequiredMixin, DeleteView):

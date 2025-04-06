@@ -1,6 +1,4 @@
-{% extends 'dashboard/main.html' %}
 
-{% block content %}
 <div class="container mt-4">
     <h1 class="mb-3">{{ skills.name }}</h1>
 
@@ -19,4 +17,4 @@
         <a href="{% url 'freelance:delete-skills' skills.slug %}" class="btn btn-danger">Delete Skill</a>
     </div>
 </div>
-{% endblock %}
+

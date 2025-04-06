@@ -9,7 +9,10 @@ from .forms import  OurAgentForm, AgentImageForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.http import HttpResponseForbidden
+from django.http import HttpResponse
 # Create your views here.
 class AgentView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = OurAgent
@@ -41,26 +44,55 @@ class AgentDetailView(LoginRequiredMixin, DetailView):
 class AgentCreateView(CreateView):
     model = OurAgent
     form_class = OurAgentForm
-    template_name = "agents/agent_form.html"
-    success_url = reverse_lazy("agents:agents-manager")
+    template_name = "agents/agent_form.html"  # Default template
+
+    def get_template_names(self):
+        if self.request.user.is_superuser:
+            return ["agents/create_agent.html"]
+        return [self.template_name]
 
     def post(self, request, *args, **kwargs):
+        # Early return for non-HTMX requests
+        if not request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string('custom_account/errors/htmx_only.html', {}, request=self.request)
+            )
+
         form = OurAgentForm(request.POST)
         image_form = AgentImageForm(request.POST, request.FILES)
 
-        if form.is_valid():
+        if form.is_valid() and image_form.is_valid():
             agent = form.save()
-            images = request.FILES.getlist('images')  # Get multiple files
-
-            for image in images:
-                AgentImage.objects.create(expert=agent, image=image)
+            for image in request.FILES.getlist('images'):
+                AgentImage.objects.create(agent=agent, image=image)
 
             messages.success(request, "Agent created successfully!")
-            return redirect(self.success_url)
 
-        return self.render_to_response(self.get_context_data(form=form, image_form=image_form))
+            return JsonResponse({
+                'message': 'Agent created successfully!',
+                'html': render_to_string('agents/agent_detail.html', {'agent': agent})
+            })
+
+        # Handle invalid form case
+        return JsonResponse({
+            'message': 'There was an error creating the agent.',
+            'html': render_to_string('agents/errors.html', {
+                'form': form,
+                'image_form': image_form
+            })
+        }, status=400)
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get('HX-Request'):
+            template_name = self.get_template_names()[0]
+            html = render_to_string(template_name, context, request=self.request)
+            return HttpResponse(html)
+        return HttpResponseForbidden(
+            render_to_string('custom_account/errors/htmx_only.html', {}, request=self.request)
+        )
+
     def test_func(self):
-        return self.request.user.groups.filter(name='manager').exists()
+        return self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser
 
 
 class AgentUpdateView(UpdateView):

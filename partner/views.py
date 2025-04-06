@@ -10,7 +10,7 @@ from .models import Partnership, PartnershipRequest, AcceptedPartnership
 from .forms import PartnershipForm, RequestForm, ResponseForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-
+from django.http import HttpResponseForbidden
 
 
 class PartnerView(LoginRequiredMixin, ListView):
@@ -70,18 +70,42 @@ class PartnerManagerDetailView(TemplateView):
         return self.request.user.groups.filter(name='manager').exists()
 
 
-
 class PartnerListView(TemplateView):
     model = Partnership
-    template_name = 'partner/list.html'
     context_object_name = 'partnerships'
 
+    def get_template_names(self):
+        if not self.request.headers.get('HX-Request'):
+            return ['custom_account/errors/htmx_only.html']
 
+        if self.request.user.is_superuser:
+            return ['partner/list_partner.html']  # Special template for superusers
+        return ['partner/list.html']  # Regular template for managers
 
-    def get_queryaset(self):
-        if self.request.user.groups.filter(name='manager').exists():
+    def get_queryset(self):
+        # Allow access to both managers and superusers
+        if self.request.user.groups.filter(name='manager').exists() or self.request.user.is_superuser:
             return Partnership.objects.all()
         return Partnership.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[self.context_object_name] = self.get_queryset()
+
+        # Add user type to context if needed for template differences
+        context['is_superuser'] = self.request.user.is_superuser
+        context['is_manager'] = self.request.user.groups.filter(name='manager').exists()
+
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string('custom_account/errors/htmx_only.html',
+                                 context,
+                                 request=self.request)
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 

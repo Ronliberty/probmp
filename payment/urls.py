@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AnalyticsView, InvoiceView, InvoiceListView, UserInvoiceDetailView, InvoiceDetailView, CreateInvoiceView, InvoiceDeleteView, CreateAnalyticView, AnalyticsDetailView, UserAnalyticDetailView, AnalyticsDeleteView, AnalyticsListView
+from .views import AnalyticsView, InvoiceView, InvoiceListView, FinancialDashboardView, UserInvoiceDetailView, InvoiceDetailView, CreateInvoiceView, InvoiceDeleteView, CreateAnalyticView, AnalyticsDetailView, UserAnalyticDetailView, AnalyticsDeleteView, AnalyticsListView
 
 
 app_name = 'payment'
@@ -7,6 +7,7 @@ app_name = 'payment'
 urlpatterns = [
 
     #invoice
+path('finances/', FinancialDashboardView.as_view(), name='finances'),
 
     path('invoice', InvoiceView.as_view(), name='invoice-list'),
     path('list/invoice/', InvoiceListView.as_view(), name='invoice-manager'),

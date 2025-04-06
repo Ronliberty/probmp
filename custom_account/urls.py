@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SettingsView, AccountView, ProfileView, HelpView, PoliciesView, NotificationsView, RedirectAfterLoginView, CustomUserSignupView, CustomUserLoginView
+from .views import SettingsView, AccountView, ProfileView, HelpView, PoliciesView, NotificationsView, RedirectAfterLoginView, CustomUserSignupView, CustomUserLoginView, UsersListView, UsersCreateView
 from django.contrib.auth.views import LogoutView
 
 app_name = 'custom_account'
@@ -15,6 +15,8 @@ urlpatterns = [
     path("signup/", CustomUserSignupView.as_view(), name="account_signup"),
     path("login/", CustomUserLoginView.as_view(), name="account_login"),
     path("logout/", LogoutView.as_view(next_page="account_login"), name="account_logout"),
+    path('users/', UsersListView.as_view(), name='users-list'),
+    path('create/users/', UsersCreateView.as_view(), name='users-create'),
 
 ]
 

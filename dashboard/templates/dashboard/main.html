@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="htmx-config" content='{"debug":true}'>
     <title>User Dashboard</title>
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body class="bg-gray-100 h-full" x-data="{
@@ -38,7 +40,7 @@
 
                 <!-- Navigation Menu -->
                 <nav class="space-y-2">
-                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg bg-blue-50 text-blue-600">
+                    <a href="{% url 'dashboard:manager-dashboard' %}" class="flex items-center space-x-3 p-3 rounded-lg bg-blue-50 text-blue-600">
                         <i class='bx bxs-dashboard text-xl'></i>
                         <span x-show="sidebarOpen">Dashboard</span>
                     </a>
@@ -56,127 +58,170 @@
                         <span x-show="sidebarOpen">Settings</span>
                     </a>
                      <a href="{% url 'logout' %}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
-                        <i class='bx bx-cog text-xl'></i>
+                        <i class='bx bx-log-out text-xl'></i>
                         <span x-show="sidebarOpen">Logout</span>
                     </a>
-
 
                     <!-- Collapsible Sections -->
                     <template x-if="sidebarOpen">
                         <div class="pt-6">
                             <p class="px-3 text-xs font-semibold text-gray-400 uppercase">Favorites</p>
                             <div class="mt-2 space-y-1">
-                                <a href="{% url 'freelance:list-news' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-star text-xl'></i>
+                                <a href=""
+                                   hx-get="{% url 'freelance:list-news' %}"
+                                    hx-target="#cont-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-news text-xl'></i>
                                     <span>News</span>
                                 </a>
-                                <a href="{% url 'freelance:list-skills' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-star text-xl'></i>
+                                <a href="{% url 'freelance:list-skills' %}"
+
+
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-code-alt text-xl'></i>
                                     <span>Skills</span>
                                 </a>
-                                <a href="{% url 'freelance:list-post' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-star text-xl'></i>
+                                <a href=""
+                                   hx-get="{% url 'freelance:list-post' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-file text-xl'></i>
                                     <span>Posts</span>
                                 </a>
-                                <a href="{% url 'freelance:list-tools' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-star text-xl'></i>
+                                <a href=""
+                                   hx-get="{% url 'freelance:list-tools' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-wrench text-xl'></i>
                                     <span>Tools</span>
                                 </a>
-                                <a href="{% url 'service:service-manager' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-star text-xl'></i>
-                                    <span>Service</span>
+                                <a href=""
+                                   hx-get="{% url 'service:service-manager' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-briefcase-alt text-xl'></i>
+                                    <span>Services</span>
                                 </a>
-                                <a href="{% url 'service:list-manager' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-star text-xl'></i>
-                                    <span>Service Request</span>
+                                <a href=""
+                                   hx-get="{% url 'service:list-manager' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-task text-xl'></i>
+                                    <span>Service Requests</span>
                                 </a>
-                                <a href="{% url 'payment:analytics-list' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-bookmark text-xl'></i>
+                                <a href=""
+                                  hx-get="{% url 'payment:analytics-list' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-bar-chart-alt text-xl'></i>
                                     <span>Analytics</span>
                                 </a>
-                                <a href="{% url 'service:list-response' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-bookmark text-xl'></i>
-                                    <span>Response</span>
+                                <a href=""
+                                   hx-get="{% url 'service:list-response' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-message-square-dots text-xl'></i>
+                                    <span>Responses</span>
                                 </a>
-                                <a href="{% url 'payment:invoice-list' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-bookmark text-xl'></i>
-                                    <span>Invoice</span>
+                                <a href=""
+                                   hx-get="{% url 'payment:invoice-list' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-receipt text-xl'></i>
+                                    <span>Invoices</span>
                                 </a>
-                                <a href="{% url 'partner:partnership-list' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-bookmark text-xl'></i>
+                                <a href=""
+                                   hx-get="{% url 'partner:partnership-list' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-group text-xl'></i>
                                     <span>Partnerships</span>
                                 </a>
-                                <a href="{% url 'agents:agent-create' %}" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <i class='bx bx-bookmark text-xl'></i>
+                                <a href=""
+                                   hx-get="{% url 'agents:agent-create' %}"
+                                    hx-target="#content-container"
+                                    hx-trigger="click"
+                                    hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-user-plus text-xl'></i>
                                     <span>Create Agent</span>
                                 </a>
-                                <li>
-                                    <a href="{% url 'base:hero_content_list' %}"
+                            </div>
 
-                                       hx-get="{% url 'base:hero_content_list' %}"
-                                       hx-target="#content-container"
-                                       hx-trigger="click"
-                                       hx-push-url="true"> <!-- Updates the browser URL -->
-                                      <i class='bx bx-news text-2xl'></i>
-                                      Hero
-                                    </a>
-                                  </li>
-
-                                  <li>
-                                      <a href=""
-
-
-                                       hx-get="{% url 'base:step-list' %}"
-                                       hx-target="#content-container"
-                                       hx-trigger="click"
-                                       hx-push-url="true">
-                                          <i class='bx bx-list-check text-2xl'></i>
-                                          Steps section
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href=""
-
-                                          hx-get="{% url 'base:service-list' %}"
-                                           hx-target="#content-container"
-                                           hx-trigger="click"
-                                           hx-push-url="true">
-                                              <i class='bx bx-briefcase text-2xl'></i>
-                                          Services
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href=""
-                                         hx-get="{% url 'base:testimonial-list' %}"
-                                           hx-target="#content-container"
-                                           hx-trigger="click"
-                                           hx-push-url="true">
-                                          <i class='bx bx-comment-detail text-2xl'></i>
-                                          Testimonial
-
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href=""
-                                         hx-get="{% url 'base:contactsubmission-list' %}"
-
-                                           hx-target="#content-container"
-                                           hx-trigger="click"
-                                           hx-push-url="true">
-                                          <i class='bx bx-envelope text-2xl'></i>
-                                          contact
-                                      </a>
-                                  </li>
-                                  <li>
-                                      <a href=""
-                                         hx-get="{% url 'base:sociallink-list' %}"
-                                           hx-target="#content-container"
-                                           hx-trigger="click"
-                                           hx-push-url="true">
-                                          <i class='bx bx-share-alt text-2xl'></i>
-                                          Socials
-                                      </a>
-                                  </li>
+                            <p class="px-3 text-xs font-semibold text-gray-400 uppercase mt-4">Website Content</p>
+                            <div class="mt-2 space-y-1">
+                                <a href="{% url 'base:hero_content_list' %}"
+                                   hx-get="{% url 'base:hero_content_list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-slideshow text-xl'></i>
+                                    <span>Hero Section</span>
+                                </a>
+                                <a href=""
+                                   hx-get="{% url 'base:step-list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-list-check text-xl'></i>
+                                    <span>Steps Section</span>
+                                </a>
+                                <a href=""
+                                   hx-get="{% url 'base:service-list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-cog text-xl'></i>
+                                    <span>Services Section</span>
+                                </a>
+                                <a href=""
+                                   hx-get="{% url 'base:testimonial-list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-comment-detail text-xl'></i>
+                                    <span>Testimonials</span>
+                                </a>
+                                <a href=""
+                                   hx-get="{% url 'base:contactsubmission-list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-envelope text-xl'></i>
+                                    <span>Contact Messages</span>
+                                </a>
+                                <a href=""
+                                   hx-get="{% url 'base:sociallink-list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                                   class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <i class='bx bx-share-alt text-xl'></i>
+                                    <span>Social Links</span>
+                                </a>
                             </div>
                         </div>
                     </template>
@@ -241,8 +286,11 @@
                     <p class="text-gray-600">Your recent activity and statistics will appear here.</p>
                 </div>
             </div>
+
+
             {% block content %}
             {% endblock %}
+
         </main>
 
         <!-- Mobile Footer Navigation -->
@@ -312,5 +360,10 @@
             transform: rotate(180deg);
         }
     </style>
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
+</script>
 </body>
 </html>

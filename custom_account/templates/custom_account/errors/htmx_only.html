@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load user_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTMX Only</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+    <div class="text-center">
+        <h1 class="text-3xl font-bold mb-4">🚫 Access Denied</h1>
+        <p class="text-lg">This page can only be accessed through the app interface.</p>
+        <p class="text-sm text-gray-400 mt-2">Please navigate using the provided dashboard buttons.</p>
+
+        <a href="{% get_user_dashboard_url request.user %}"
+           class="mt-6 inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded">
+            ⬅ Go to Dashboard
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Create New Agent</h1>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Main Agent Form -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Agent Information</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Names -->
+                <div>
+                    <label for="{{ form.names.id_for_label }}" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" name="{{ form.names.name }}" id="{{ form.names.id_for_label }}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                           value="{{ form.names.value|default:'' }}" required>
+                    {% if form.names.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.names.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                           value="{{ form.email.value|default:'' }}" required>
+                    {% if form.email.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.email.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Phone Number -->
+                <div>
+                    <label for="{{ form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="tel" name="{{ form.phone_number.name }}" id="{{ form.phone_number.id_for_label }}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                           value="{{ form.phone_number.value|default:'' }}">
+                    {% if form.phone_number.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.phone_number.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Portfolio -->
+                <div>
+                    <label for="{{ form.portfolio.id_for_label }}" class="block text-sm font-medium text-gray-700">Portfolio URL</label>
+                    <input type="url" name="{{ form.portfolio.name }}" id="{{ form.portfolio.id_for_label }}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                           value="{{ form.portfolio.value|default:'' }}">
+                    {% if form.portfolio.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.portfolio.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Social Links -->
+                <div class="md:col-span-2">
+                    <label for="{{ form.social_links.id_for_label }}" class="block text-sm font-medium text-gray-700">Social Media Links (comma separated)</label>
+                    <input type="text" name="{{ form.social_links.name }}" id="{{ form.social_links.id_for_label }}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                           value="{{ form.social_links.value|default:'' }}">
+                    {% if form.social_links.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.social_links.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Bio -->
+                <div class="md:col-span-2">
+                    <label for="{{ form.bio.id_for_label }}" class="block text-sm font-medium text-gray-700">Bio</label>
+                    <textarea name="{{ form.bio.name }}" id="{{ form.bio.id_for_label }}" rows="4"
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">{{ form.bio.value|default:'' }}</textarea>
+                    {% if form.bio.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.bio.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Slug -->
+
+
+                <!-- Active Status -->
+                <div class="flex items-center">
+                    <input type="checkbox" name="{{ form.active.name }}" id="{{ form.active.id_for_label }}"
+                           class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                           {% if form.active.value %}checked{% endif %}>
+                    <label for="{{ form.active.id_for_label }}" class="ml-2 block text-sm text-gray-700">Active</label>
+                    {% if form.active.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.active.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Agent Image</h2>
+            <div>
+                <label for="{{ image_form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">Profile Image</label>
+                <input type="file" name="{{ image_form.image.name }}" id="{{ image_form.image.id_for_label }}"
+                       class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                {% if image_form.image.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ image_form.image.errors }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="flex justify-end">
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Create Agent
+            </button>
+        </div>
+    </form>
+</div>

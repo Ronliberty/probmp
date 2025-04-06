@@ -1,0 +1,58 @@
+
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Financial Dashboard</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Invoices Card -->
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-lg p-6 text-white">
+            <h2 class="text-xl font-semibold mb-2">Invoices</h2>
+            <p class="text-purple-100 mb-4">Manage and create invoices</p>
+            <div class="flex space-x-3">
+                <a href=""
+                   class="px-4 py-2 bg-white text-purple-600 rounded-md hover:bg-purple-50 transition-colors"
+                   hx-get=""
+                   hx-target="#content-container">
+                    Create Invoice
+                </a>
+                <a href=""
+                   class="px-4 py-2 border border-white text-white rounded-md hover:bg-purple-500/20 transition-colors"
+                   hx-get="{% url 'payment:invoice-manager' %}"
+                        hx-target="#content-container"
+                        hx-trigger="click"
+                        hx-push-url="true">
+                    View All
+                </a>
+            </div>
+        </div>
+        
+        <!-- Reports Card -->
+        <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg shadow-lg p-6 text-white">
+            <h2 class="text-xl font-semibold mb-2">Reports</h2>
+            <p class="text-green-100 mb-4">View financial reports</p>
+            <button class="px-4 py-2 bg-white text-green-600 rounded-md hover:bg-green-50 transition-colors" disabled>
+                Coming Soon
+            </button>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Quick Stats</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+            <div class="p-6">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Revenue</h3>
+                <p class="text-2xl font-bold text-gray-800 dark:text-white">$12,345</p>
+            </div>
+            <div class="p-6">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Outstanding Invoices</h3>
+                <p class="text-2xl font-bold text-gray-800 dark:text-white">5</p>
+            </div>
+            <div class="p-6">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Paid This Month</h3>
+                <p class="text-2xl font-bold text-gray-800 dark:text-white">$3,210</p>
+            </div>
+        </div>
+    </div>
+</div>
