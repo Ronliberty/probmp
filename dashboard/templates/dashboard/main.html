@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="htmx-config" content='{"debug":true}'>
-    <title>User Dashboard</title>
+    <title>{{ request.user.get_full_name|default:request.user.username }}</title>
      <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -257,7 +257,7 @@
                     <button @click="sidebarOpen = !sidebarOpen" class="md:hidden">
                         <i class='bx bx-menu text-2xl'></i>
                     </button>
-                    <h1 class="text-xl font-semibold text-gray-800">Dashboard Overview</h1>
+                    <h1 class="text-xl font-semibold text-gray-800">{{ request.user.get_full_name|default:request.user.username }}</h1>
                     <div class="flex items-center space-x-4">
                         <!-- Messages Dropdown -->
                         <div class="relative">

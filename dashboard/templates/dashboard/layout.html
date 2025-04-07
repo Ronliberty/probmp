@@ -145,8 +145,8 @@
                     <div class="flex items-center space-x-3" :class="!sidebarOpen && 'hidden'">
                         <img src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full border-2 border-purple-300">
                         <div>
-                            <h3 class="font-semibold text-white">Root Admin</h3>
-                            <p class="text-xs text-purple-200">Super User</p>
+                            <h3 class="font-semibold text-white">{{ request.user.get_full_name|default:request.user.username }}</h3>
+                            <p class="text-xs text-purple-200">Boss Man</p>
                         </div>
                     </div>
                     <button @click="sidebarOpen = !sidebarOpen"

@@ -4,8 +4,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.views.generic import TemplateView, DetailView, CreateView, DeleteView, UpdateView, ListView
-from .models import AgentImage, OurAgent
-from .forms import  OurAgentForm, AgentImageForm
+from .models import AgentImage, OurAgent, Tickets, TicketStatus, Information
+from .forms import  OurAgentForm, AgentImageForm, InformationForm, InformationImageForm, InformationVideoForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
@@ -13,6 +13,10 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from django.http import HttpResponse
+from django.utils.timezone import now
+from django.db.models.functions import TruncDate, TruncMonth, TruncYear
+from django.db.models import Count
+
 # Create your views here.
 class AgentView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = OurAgent
@@ -138,3 +142,235 @@ class AgentDeleteView(LoginRequiredMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
+
+class TicketCreateView(CreateView):
+    model = Tickets
+    fields = ['subject', 'description', 'assigned_user', 'assigned_group']
+    template_name = 'agents/tickets/ticket_form.html'
+    success_url = reverse_lazy('ticket-list')
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class TicketDetailView(DetailView):
+    model = Tickets
+    template_name = 'agents/tickets/ticket_detail.html'
+    context_object_name = 'ticket'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+
+class TicketUpdateView(UpdateView):
+    model = Tickets
+    fields = ['subject', 'description', 'assigned_user', 'assigned_group']
+    template_name = 'agents/tickets/ticket_form.html'
+    success_url = reverse_lazy('ticket-list')
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+
+class TicketDeleteView(DeleteView):
+    model = Tickets
+    template_name = 'agents/tickets/confirm_delete.html'
+    success_url = reverse_lazy('ticket-list')
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+
+class TicketListView(ListView):
+    model = Tickets
+    template_name = 'agents/tickets/ticket_list.html'
+    context_object_name = 'tickets'
+
+    def get_template_names(self):
+        if not self.request.headers.get('HX-Request'):
+            return ['custom_account/errors/htmx_only.html']
+
+        user = self.request.user
+
+        if user.is_superuser:
+            return ['agents/tickets/ticket_super.html']
+        elif user.groups.filter(name='manager').exists():
+            return ['agents/tickets/ticket_manager.html']
+        elif user.groups.filter(name='agent').exists():
+            return ['agents/tickets/ticket-list.html']
+        else:
+            return ['agents/tickets/ticket_list.html']  # fallback for users with no group
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='manager').exists() or user.groups.filter(name='agent').exists():
+            return Tickets.objects.all().order_by('-created_at')
+        return Tickets.objects.filter(owner=user).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_agent'] = self.request.user.groups.filter(name='agent').exists()
+        context['is_manager'] = self.request.user.groups.filter(name='manager').exists()
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string('custom_account/errors/htmx_only.html', context, request=self.request)
+            )
+        return super().render_to_response(context, **response_kwargs)
+
+
+class TicketEngageView(UserPassesTestMixin, UpdateView):
+    model = Tickets
+    fields = ['status', 'response']
+    template_name = 'agents/tickets/ticket_engage_form.html'
+    context_object_name = 'ticket'
+
+    slug_url_kwarg = 'slug'
+
+    def test_func(self):
+        ticket = self.get_object()
+        # Only superuser, manager, or assigned user can engage tickets
+        if self.request.user.is_superuser:
+            return True
+        if self.request.user.groups.filter(name='manager').exists():
+            return True
+        if ticket.assigned_user == self.request.user or ticket.assigned_group in self.request.user.groups.all():
+            return True
+        return False
+
+    def form_valid(self, form):
+        # If a ticket is marked as RESOLVED or CLOSED, it can’t be changed anymore
+        if form.instance.status in [TicketStatus.RESOLVED, TicketStatus.CLOSED]:
+            return HttpResponseForbidden("You can't modify a resolved or closed ticket.")
+
+        # Assign the user who responded
+        form.instance.responded_by = self.request.user
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Redirect to ticket detail view after responding
+        return reverse_lazy('ticket-detail', kwargs={'slug': self.object.slug})
+
+
+class InformationCreateView(UserPassesTestMixin, CreateView):
+    model = Information
+    form_class = InformationForm
+    template_name = 'agents/information/information_form.html'
+    success_url = reverse_lazy('information-list')
+
+    def test_func(self):
+        # Only allow managers to create information
+        return self.request.user.groups.filter(name='manager').exists()
+
+    def form_valid(self, form):
+        # Automatically set the owner (current user) before saving
+        form.instance.owner = self.request.user
+        information = form.save()
+
+        # Handle Image Upload
+        image_form = InformationImageForm(self.request.POST, self.request.FILES)
+        if image_form.is_valid():
+            image_form.instance.information = information
+            image_form.save()
+
+        # Handle Video Upload
+        video_form = InformationVideoForm(self.request.POST, self.request.FILES)
+        if video_form.is_valid():
+            video_form.instance.information = information
+            video_form.save()
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['image_form'] = InformationImageForm()
+        context['video_form'] = InformationVideoForm()
+        return context
+
+
+
+
+# Define the ListView for Information
+class InformationListView(UserPassesTestMixin, ListView):
+    model = Information
+    template_name = 'agents/information/information_list.html'
+    context_object_name = 'informations'
+
+    def test_func(self):
+        # Only allow managers to view the list of information
+        return self.request.user.groups.filter(name='manager').exists()
+
+    def get_queryset(self):
+        # List all information for managers
+        return Information.objects.all().order_by('-created_at')
+
+
+# Define the DetailView for Information
+class InformationDetailView(UserPassesTestMixin, DetailView):
+    model = Information
+    template_name = 'information/information_detail.html'
+    context_object_name = 'information'
+
+    def test_func(self):
+        # Only allow managers to view the details of information
+        return self.request.user.groups.filter(name='manager').exists()
+
+
+# Define the DeleteView for Information
+class InformationDeleteView(UserPassesTestMixin, DeleteView):
+    model = Information
+    template_name = 'information/information_confirm_delete.html'
+    context_object_name = 'information'
+    success_url = reverse_lazy('information-list')
+
+    def test_func(self):
+        # Only allow managers to delete information
+        return self.request.user.groups.filter(name='manager').exists()
+
+    def delete(self, request, *args, **kwargs):
+        information = self.get_object()
+        # Optionally, delete related images and videos
+        information.images.all().delete()
+        information.videos.all().delete()
+        return super().delete(request, *args, **kwargs)
+
+class TicketAnalysisView(TemplateView):
+    template_name = 'agents/tickets/ticket_analysis.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Current date and time to use for filtering
+        current_date = now()
+
+        # Tickets data aggregated by day, month, and year for solved tickets
+        tickets_per_day = Tickets.objects.filter(status='resolved').annotate(day=TruncDate('updated_at')).values('day').annotate(count=Count('id')).order_by('-day')
+        tickets_per_month = Tickets.objects.filter(status='resolved').annotate(month=TruncMonth('updated_at')).values('month').annotate(count=Count('id')).order_by('-month')
+        tickets_per_year = Tickets.objects.filter(status='resolved').annotate(year=TruncYear('updated_at')).values('year').annotate(count=Count('id')).order_by('-year')
+
+        # Unsolved tickets by day, month, and year
+        unsolved_tickets_per_day = Tickets.objects.filter(status='open').annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id')).order_by('-day')
+        unsolved_tickets_per_month = Tickets.objects.filter(status='open').annotate(month=TruncMonth('created_at')).values('month').annotate(count=Count('id')).order_by('-month')
+        unsolved_tickets_per_year = Tickets.objects.filter(status='open').annotate(year=TruncYear('created_at')).values('year').annotate(count=Count('id')).order_by('-year')
+
+        # Tickets that are still in progress
+        in_progress_tickets = Tickets.objects.filter(status='in_progress').count()
+
+        # Last solved ticket data (last 1 solved ticket)
+        last_solved_ticket = Tickets.objects.filter(status='resolved').order_by('-updated_at').first()
+
+        # Aggregate ticket statistics and pass them to the context
+        context.update({
+            'tickets_per_day': tickets_per_day,
+            'tickets_per_month': tickets_per_month,
+            'tickets_per_year': tickets_per_year,
+            'unsolved_tickets_per_day': unsolved_tickets_per_day,
+            'unsolved_tickets_per_month': unsolved_tickets_per_month,
+            'unsolved_tickets_per_year': unsolved_tickets_per_year,
+            'in_progress_tickets': in_progress_tickets,
+            'last_solved_ticket': last_solved_ticket,
+            'current_date': current_date,
+        })
+
+        return context

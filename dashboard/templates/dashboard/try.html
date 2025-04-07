@@ -46,7 +46,7 @@
                              class="w-10 h-10 rounded-full cursor-pointer border-2 border-emerald-500"
                              @click="profileOpen = !profileOpen">
                         <div>
-                            <h3 class="font-semibold dark:text-white">Alex Rivera</h3>
+                            <h3 class="font-semibold dark:text-white">{{ request.user.get_full_name|default:request.user.username }}</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400">Support Agent</p>
                         </div>
                     </div>
