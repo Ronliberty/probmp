@@ -1,6 +1,12 @@
 {% extends 'dashboard/main.html' %}
 
 {% block content %}
-<div id="content-container">
+<div id="cont-container">
+    <div class="p-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+    <h2 class="text-lg font-semibold mb-4">Welcome Back, {{ user.get_display_name }}!</h2>
+    <p class="text-gray-600">Your recent activity and statistics will appear here.</p>
+</div>
+
 </div>
 {% endblock %}

@@ -20,15 +20,7 @@
     messagesOpen: false,
     darkMode: localStorage.getItem('darkMode') === 'true',
     footerMenuOpen: false,
-    tickets: [
-        { id: 1, customer: 'Sarah Johnson', status: 'open', priority: 'high', lastUpdated: '2h ago' },
-        { id: 2, customer: 'Mike Chen', status: 'pending', priority: 'medium', lastUpdated: '4h ago' },
-        { id: 3, customer: 'Emma Wilson', status: 'closed', priority: 'low', lastUpdated: '1d ago' }
-    ],
-    messages: [
-        { sender: 'Support Team', content: 'System update scheduled', time: '10m ago' },
-        { sender: 'John Doe', content: 'Urgent: Payment issue', time: '45m ago' }
-    ],
+
     init() {
         if(this.darkMode) document.documentElement.classList.add('dark');
         window.addEventListener('resize', () => this.sidebarOpen = window.innerWidth >= 768);

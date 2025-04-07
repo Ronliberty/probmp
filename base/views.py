@@ -13,7 +13,8 @@ from django.views import View
 from django.utils.text import slugify
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
-
+from django.http import HttpResponseForbidden
+from django.template.loader import render_to_string
 
 def is_manager(user):
     return user.groups.filter(name='managers').exists()
@@ -60,13 +61,16 @@ class ContactSubmissionListView(ListView):
     template_name = 'base/contact/list.html'
     context_object_name = 'submissions'
 
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
-
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 class ContactSubmissionDetailView(DetailView):
     model = ContactSubmission
@@ -74,13 +78,17 @@ class ContactSubmissionDetailView(DetailView):
     context_object_name = 'submission'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class SocialLinkCreateView(CreateView):
@@ -95,13 +103,16 @@ class SocialLinkCreateView(CreateView):
         instance.save()  # This triggers the slug generation
         return super().form_valid(form)
 
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
-
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class SocialLinkListView(ListView):
@@ -113,13 +124,16 @@ class SocialLinkListView(ListView):
     def get_queryset(self):
         return SocialLink.objects.all().order_by('-created_at')
 
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
-
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 class SocialLinkDetailView(DetailView):
     model = SocialLink
@@ -127,13 +141,16 @@ class SocialLinkDetailView(DetailView):
     context_object_name = 'social_link'
     slug_url_kwarg = 'slug'
 
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
-
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 class SocialLinkDeleteView(DeleteView):
     model = SocialLink
@@ -141,19 +158,23 @@ class SocialLinkDeleteView(DeleteView):
     success_url = reverse_lazy('base:sociallink-list')
     slug_url_kwarg = 'slug'
 
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
-
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class HeroSectionView(View):
     def get(self, request, *args, **kwargs):
         hero_content = HeroContent.objects.filter(is_active=True).first()
         return render(request, "base/partials/hero_section.html", {"hero_content": hero_content})
+
 
 
 
@@ -167,13 +188,16 @@ class HeroContentCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView)
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
 
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
-
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 class HeroContentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = HeroContent
@@ -183,13 +207,17 @@ class HeroContentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
 
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class HeroListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -210,14 +238,17 @@ class HeroListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         if self.request.headers.get('HX-Request'):
             return render(self.request, self.template_name, context)
         return HttpResponse("Invalid request", status=400)
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
-
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -229,14 +260,17 @@ class HeroDeleteView(UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
-
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 class HowItWorksView(View):
     def get(self, request, *args, **kwargs):
@@ -249,13 +283,17 @@ class StepListView(ListView):
     model = Step
     template_name = "base/step/step_list.html"
     context_object_name = "steps"
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 class StepDetailView(DetailView):
     model = Step
@@ -263,13 +301,17 @@ class StepDetailView(DetailView):
     context_object_name = "step"
     slug_field = "slug"
     slug_url_kwarg = "slug"
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class StepCreateView(CreateView):
@@ -281,13 +323,17 @@ class StepCreateView(CreateView):
     def form_valid(self, form):
         form.instance.slug = slugify(form.instance.title)  # Ensure slug is set
         return super().form_valid(form)
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class StepUpdateView(UpdateView):
@@ -297,13 +343,17 @@ class StepUpdateView(UpdateView):
     slug_field = "slug"
     slug_url_kwarg = "slug"
     success_url = reverse_lazy("base:step-list")
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -313,13 +363,19 @@ class StepDeleteView(DeleteView):
     slug_field = "slug"
     slug_url_kwarg = "slug"
     success_url = reverse_lazy("base:step-list")
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
+    # Redirect non-HTMX requests
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
 
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class ServiceSectionView(View):
@@ -334,13 +390,17 @@ class ServiceListView(View):
     def get(self, request, *args, **kwargs):
         services = Service.objects.all()
         return render(request, "base/service/service_list.html", {"services": services})
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 # Create View
 class ServiceCreateView(CreateView):
@@ -352,13 +412,17 @@ class ServiceCreateView(CreateView):
     def form_valid(self, form):
         form.instance.slug = slugify(form.instance.title)  # Ensure slug is set before saving
         return super().form_valid(form)
-    def get(self, request, *args, **kwargs):
-        is_htmx = self.request.headers.get('HX-Request') == 'true'
 
-        if not is_htmx:
-            self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
-
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 # Update View
 class ServiceUpdateView(View):
@@ -388,6 +452,16 @@ class ServiceUpdateView(View):
             self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
 
         return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 # Delete View
 class ServiceDeleteView(View):
@@ -402,6 +476,16 @@ class ServiceDeleteView(View):
             self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
 
         return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -429,6 +513,16 @@ class TestimonialListView(ListView):
             self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
 
         return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class TestimonialCreateView(CreateView):
@@ -455,6 +549,16 @@ class TestimonialCreateView(CreateView):
         if self.request.headers.get('HX-Request'):
             return render(self.request, 'base/testimonial/form.html', {'form': form})
         return super().form_invalid(form)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class TestimonialUpdateView(UpdateView):
@@ -476,6 +580,16 @@ class TestimonialUpdateView(UpdateView):
             return render(self.request, 'base/testimonial/list.html',
                           {'testimonials': Testimonial.objects.all()})
         return response
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class TestimonialDeleteView(DeleteView):
@@ -493,6 +607,16 @@ class TestimonialDeleteView(DeleteView):
             self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
 
         return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class TestimonialDetailView(DetailView):
@@ -510,6 +634,16 @@ class TestimonialDetailView(DetailView):
             self.template_name = 'dashboard/manager_dashboard.html' # Redirect non-HTMX requests
 
         return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 

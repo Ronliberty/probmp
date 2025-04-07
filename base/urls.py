@@ -54,7 +54,7 @@ urlpatterns = [
     path("steps/<slug:slug>/update/", StepUpdateView.as_view(), name="step-update"),
     path("steps/<slug:slug>/delete/", StepDeleteView.as_view(), name="step-delete"),
 
-    path("services/", ServiceListView.as_view(), name="service-list"),
+    path("service/list/", ServiceListView.as_view(), name="service-list"),
     path("services/create/", ServiceCreateView.as_view(), name="service-create"),
     path("services/update/<slug:slug>/", ServiceUpdateView.as_view(), name="service-update"),
     path("services/delete/<slug:slug>/", ServiceDeleteView.as_view(), name="service-delete"),

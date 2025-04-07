@@ -12,6 +12,7 @@ from .models import Post, News, Tool, Skill
 from .forms import PostForm, NewsForm, ToolForm, SkillForm
 # Create your views here.
 
+from .views_base import HTMXOnlyView
 
 class PostView(LoginRequiredMixin, ListView):
     model = Post
@@ -43,6 +44,17 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     def test_func(self):
         return self.request.user.groups.filter(name='default').exists()
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = 'Post'
@@ -56,6 +68,17 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 
 class PostManagerDetailView(LoginRequiredMixin, DetailView):
@@ -66,6 +89,17 @@ class PostManagerDetailView(LoginRequiredMixin, DetailView):
     slug_url_kwarg = 'slug'
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class PostListView(LoginRequiredMixin, ListView):
@@ -97,6 +131,16 @@ class PostListView(LoginRequiredMixin, ListView):
             return JsonResponse({"posts": data}, status=200)
 
         return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
@@ -108,6 +152,17 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -123,10 +178,17 @@ class NewsView(LoginRequiredMixin, ListView):
         return self.request.user.groups.filter(name='default').exists()
 
     def render_to_response(self, context, **response_kwargs):
-        """Only return partial if request is from HTMX"""
-        if self.request.headers.get('HX-Request'):
-            return render(self.request, self.template_name, context)
-        return HttpResponse("Invalid request", status=400)
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
+
 
 class NewsDetailView(LoginRequiredMixin, DetailView):
     model = News
@@ -137,6 +199,17 @@ class NewsDetailView(LoginRequiredMixin, DetailView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='default').exists()
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -155,6 +228,17 @@ class NewsCreateView(LoginRequiredMixin, CreateView):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 class NewsManagerDetailView(LoginRequiredMixin, UserPassesTestMixin,  DetailView):
     model = News
@@ -169,11 +253,23 @@ class NewsManagerDetailView(LoginRequiredMixin, UserPassesTestMixin,  DetailView
     def get_queryset(self):
         return News.objects.all()
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 class NewsListView(LoginRequiredMixin, ListView):
     model = News
     template_name = 'freelance/news-list.html'
     context_object_name = 'news_list'
+    htmx_template_name = 'freelance/partials/news-list.html'
 
 
     def get_queryset(self):
@@ -184,11 +280,16 @@ class NewsListView(LoginRequiredMixin, ListView):
     def render_to_response(self, context, **response_kwargs):
         if not self.request.headers.get('HX-Request'):
             return HttpResponseForbidden(
-                render_to_string('custom_account/errors/htmx_only.html',
-                                 context,
-                                 request=self.request)
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
             )
         return super().render_to_response(context, **response_kwargs)
+
+
+
 
 
 class NewsDeleteView(LoginRequiredMixin, DeleteView):
@@ -199,6 +300,16 @@ class NewsDeleteView(LoginRequiredMixin, DeleteView):
     slug_url_kwarg = 'slug'
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class ToolsView(LoginRequiredMixin, ListView):
@@ -209,11 +320,16 @@ class ToolsView(LoginRequiredMixin, ListView):
     def test_func(self):
         return self.request.user.groups.filter(name='default').exists()
 
-    def get(self, request, *args, **kwargs):
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            html = render_to_string(self.template_name, self.get_context_data())
-            return JsonResponse({'html': html})
-        return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -228,6 +344,17 @@ class ToolsDetailView(LoginRequiredMixin, DetailView):
     def test_func(self):
         return self.request.user.groups.filter(name='default').exists()
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 
 class ToolsCreateView(LoginRequiredMixin, CreateView):
@@ -235,6 +362,17 @@ class ToolsCreateView(LoginRequiredMixin, CreateView):
     form_class = ToolForm
     template_name = 'freelance/tools-create.html'
     success_url = reverse_lazy('freelance:list-tools')
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -261,6 +399,17 @@ class ToolsManagerDetailView(LoginRequiredMixin,UserPassesTestMixin, DetailView)
     def get_queryset(self):
         return Tool.objects.all()
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 
 
@@ -278,6 +427,17 @@ class ToolsListView(LoginRequiredMixin, ListView):
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 
 class ToolsDeleteView(LoginRequiredMixin, DeleteView):
@@ -288,6 +448,18 @@ class ToolsDeleteView(LoginRequiredMixin, DeleteView):
     slug_url_kwarg = 'slug'
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
+
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -306,6 +478,17 @@ class SkillsView(LoginRequiredMixin, ListView):
             return JsonResponse({'html': html})
         return super().get(request, *args, **kwargs)
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 
 class SkillsDetailView(LoginRequiredMixin, DetailView):
@@ -316,6 +499,17 @@ class SkillsDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'skills'
     def test_func(self):
         return self.request.user.groups.filter(name='default').exists()
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 class SkillsCreateView(LoginRequiredMixin, CreateView):
@@ -332,6 +526,18 @@ class SkillsCreateView(LoginRequiredMixin, CreateView):
         return self.request.user.groups.filter(name='manager').exists()
 
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
+
 
 class SkillsManagerDetailView(LoginRequiredMixin, DetailView):
     model = Skill
@@ -342,6 +548,18 @@ class SkillsManagerDetailView(LoginRequiredMixin, DetailView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
+
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 
@@ -359,6 +577,17 @@ class SkillsListView(LoginRequiredMixin,UserPassesTestMixin, ListView):
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
 
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
+
 
 
 
@@ -371,6 +600,17 @@ class SkillsDeleteView(LoginRequiredMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.groups.filter(name='manager').exists()
+
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string(
+                    'custom_account/errors/htmx_only.html',
+                    context,
+                    request=self.request
+                )
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 

@@ -1,38 +1,10 @@
+{# news_list.html (main template) #}
+{% if request.htmx %}
+  {% include "freelance/partials/news_table.html" %}
+{% else %}
 
-<div class="container mt-4">
-    <h1 class="mb-4">News Articles</h1>
-    <a href="" class="btn btn-primary mb-3">Create New News</a>
+    <div id="cont-container">
+      {% include "freelance/partials/news-list.html" %}
+    </div>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Headline</th>
-                <th>Country</th>
-                <th>Summary</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for news in news_list %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>
-                    <a href="{% url 'freelance:news-det' news.slug %}">{{ news.headline }}</a>
-                </td>
-                <td>{{ news.country|default:"N/A" }}</td>
-                <td>{{ news.content|truncatewords:20 }}</td>
-                <td>
-                    <a href="" class="btn btn-info btn-sm">View</a>
-                    <a href="" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center">No news articles available.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
+{% endif %}
