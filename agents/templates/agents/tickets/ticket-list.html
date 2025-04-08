@@ -1,10 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="container mx-auto px-4 py-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">All Tickets</h1>
+    <a hx-get="{% url 'agents:ticket-analysis' %}" hx-target="#content-container"
+       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+      View Analytics
+    </a>
+  </div>
 
-</body>
-</html>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for ticket in tickets %}
+    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">
+            <a hx-get="{% url 'agents:ticket-detail' ticket.slug %}" hx-target="#content-container"
+               class="hover:text-blue-600">
+              {{ ticket.subject|truncatechars:30 }}
+            </a>
+          </h3>
+          <p class="text-sm text-gray-500 mt-1">
+            {{ ticket.created_at|date:"M d, Y" }}
+          </p>
+        </div>
+        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-{{ ticket.status_color }}-100 text-{{ ticket.status_color }}-800">
+          {{ ticket.get_status_display }}
+        </span>
+      </div>
+
+      <div class="text-sm text-gray-600 mb-4">
+        {{ ticket.description|truncatechars:80 }}
+      </div>
+
+      <div class="flex items-center justify-between border-t pt-4">
+        <div class="text-sm">
+          <p class="text-gray-500">Assigned to</p>
+          <p class="font-medium">{{ ticket.assigned_user|default:"Unassigned" }}</p>
+        </div>
+        <div class="flex space-x-2">
+          <a hx-get="{% url 'agents:ticket-engage' ticket.slug %}" hx-target="#content-container"
+             class="text-indigo-600 hover:text-indigo-900" title="Engage">
+            ✍️
+          </a>
+          <a hx-get="{% url 'agents:ticket-update' ticket.slug %}" hx-target="#content-container"
+             class="text-green-600 hover:text-green-900" title="Edit">
+            ✏️
+          </a>
+          <a hx-get="{% url 'agents:ticket-delete' ticket.slug %}" hx-target="#content-container"
+             class="text-red-600 hover:text-red-900" title="Delete">
+            🗑️
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>

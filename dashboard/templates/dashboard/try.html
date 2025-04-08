@@ -7,6 +7,7 @@
     <title>Customer Support Dashboard</title>
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script>
         tailwind.config = {
             darkMode: 'class'
@@ -59,7 +60,18 @@
 
                 <!-- Navigation Menu -->
                 <nav class="space-y-2">
-                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300"
+                    <a href="{% url 'dashboard:agent-dashboard' %}"
+                       class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300"
+                       :class="sidebarOpen || 'justify-center'">
+                        <i class='bx bx-home text-xl'></i>  <!-- Changed from bx-chat to bx-home -->
+                        <span x-show="sidebarOpen">Home</span>
+                    </a>
+                                        <a href="#"
+                       hx-get="{% url 'agents:ticket-list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                       class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300"
                        :class="sidebarOpen || 'justify-center'">
                         <i class='bx bx-chat text-xl'></i>
                         <span x-show="sidebarOpen">Tickets</span>
@@ -70,13 +82,25 @@
                         <i class='bx bx-group text-xl'></i>
                         <span x-show="sidebarOpen">Customers</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300"
+                    <a href="#"
+                       hx-get="{% url 'agents:info-list' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+                       class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300"
                        :class="sidebarOpen || 'justify-center'">
                         <i class='bx bx-book-open text-xl'></i>
                         <span x-show="sidebarOpen">Knowledge Base</span>
                     </a>
                     <div class="pt-6 border-t border-gray-200 dark:border-slate-700">
-                        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300"
+                        <a href=""
+                           hx-get="{% url 'agents:ticket-analysis' %}"
+                                   hx-target="#content-container"
+                                   hx-trigger="click"
+                                   hx-push-url="true"
+
+
+                           class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300"
                            :class="sidebarOpen || 'justify-center'">
                             <i class='bx bx-line-chart text-xl'></i>
                             <span x-show="sidebarOpen">Analytics</span>
@@ -144,86 +168,13 @@
                 </div>
 
                 <!-- Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 py-4">
-                    <div class="bg-blue-50 dark:bg-slate-700 p-4 rounded-lg">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm text-blue-600 dark:text-blue-300">Open Tickets</p>
-                                <p class="text-2xl font-bold dark:text-white">15</p>
-                            </div>
-                            <i class='bx bx-chat text-3xl text-blue-600 dark:text-blue-300'></i>
-                        </div>
-                    </div>
-                    <div class="bg-green-50 dark:bg-slate-700 p-4 rounded-lg">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm text-green-600 dark:text-green-300">Solved Today</p>
-                                <p class="text-2xl font-bold dark:text-white">32</p>
-                            </div>
-                            <i class='bx bx-check-circle text-3xl text-green-600 dark:text-green-300'></i>
-                        </div>
-                    </div>
-                    <div class="bg-purple-50 dark:bg-slate-700 p-4 rounded-lg">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm text-purple-600 dark:text-purple-300">Satisfaction Rate</p>
-                                <p class="text-2xl font-bold dark:text-white">94%</p>
-                            </div>
-                            <i class='bx bx-happy text-3xl text-purple-600 dark:text-purple-300'></i>
-                        </div>
-                    </div>
-                </div>
+
             </header>
             {% block content %}
             {% endblock %}
 
             <!-- Content Area -->
-            <div class="p-6">
-                <!-- Tickets Table -->
-                <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-xl font-semibold dark:text-white">Recent Tickets</h2>
-                        <button class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center">
-                            <i class='bx bx-plus mr-2'></i> New Ticket
-                        </button>
-                    </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="text-sm text-gray-500 dark:text-gray-400 border-b dark:border-slate-700">
-                                <tr>
-                                    <th class="pb-3 text-left">Customer</th>
-                                    <th class="pb-3 text-left">Status</th>
-                                    <th class="pb-3 text-left">Priority</th>
-                                    <th class="pb-3 text-left">Last Updated</th>
-                                    <th class="pb-3"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm dark:text-gray-300">
-                                <template x-for="ticket in tickets" :key="ticket.id">
-                                    <tr class="border-b dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
-                                        <td class="py-4" x-text="ticket.customer"></td>
-                                        <td>
-                                            <span class="px-2 py-1 rounded-full text-xs font-medium"
-                                                  :class="{
-                                                    'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300': ticket.status === 'open',
-                                                    'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300': ticket.status === 'pending',
-                                                    'bg-gray-100 dark:bg-gray-900/20 text-gray-800 dark:text-gray-300': ticket.status === 'closed'
-                                                  }"
-                                                  x-text="ticket.status"></span>
-                                        </td>
-                                        <td x-text="ticket.priority"></td>
-                                        <td x-text="ticket.lastUpdated"></td>
-                                        <td class="text-right">
-                                            <i class='bx bx-chevron-right text-gray-400'></i>
-                                        </td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
             <!-- Mobile Footer -->
             <footer class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 shadow-t-lg md:hidden z-40">

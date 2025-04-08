@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="container mx-auto px-4 py-6">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-2xl font-bold mb-4">Confirm Delete</h2>
+    <p class="mb-6">Are you sure you want to delete "{{ object }}"?</p>
 
-</body>
-</html>
+    <form method="post" hx-post="{{ request.path }}" hx-target="#content-container">
+      {% csrf_token %}
+      <div class="flex justify-end space-x-4">
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+          Delete
+        </button>
+        <a hx-get="{% url 'agents:ticket-detail' object.slug %}" hx-target="#content-container"
+           class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -221,7 +221,7 @@ class TicketListView(ListView):
 
 class TicketEngageView(UserPassesTestMixin, UpdateView):
     model = Tickets
-    fields = ['status', 'response']
+    fields = ['response']
     template_name = 'agents/tickets/ticket_engage_form.html'
     context_object_name = 'ticket'
 
@@ -297,13 +297,42 @@ class InformationListView(UserPassesTestMixin, ListView):
     template_name = 'agents/information/information_list.html'
     context_object_name = 'informations'
 
+
     def test_func(self):
-        # Only allow managers to view the list of information
-        return self.request.user.groups.filter(name='manager').exists()
+        user =self.request.user
+        return (
+            user.is_authenticated and (
+            user.is_superuser or
+            user.groups.filter(name__in=['manager', 'agent', 'default']).exists()
+        )
+        )
+
+    def get_template_names(self):
+        if not self.request.headers.get('HX-Request'):
+            return ['custom_account/errors/htmx_only.html']
+
+        user = self.request.user
+
+        if user.is_superuser:
+            return ['agents/information/infor_super.html']
+        elif user.groups.filter(name='manager').exists():
+            return ['agents/information/infor_manager.html']
+        elif user.groups.filter(name='agent').exists():
+            return ['agents/information/infor-list.html']
+        else:
+            return ['agents/information/information_list.html']
+
+
 
     def get_queryset(self):
-        # List all information for managers
-        return Information.objects.all().order_by('-created_at')
+
+        return Information.objects.all()
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string('custom_account/errors/htmx_only.html', context, request=self.request)
+            )
+        return super().render_to_response(context, **response_kwargs)
 
 
 # Define the DetailView for Information
@@ -320,7 +349,7 @@ class InformationDetailView(UserPassesTestMixin, DetailView):
 # Define the DeleteView for Information
 class InformationDeleteView(UserPassesTestMixin, DeleteView):
     model = Information
-    template_name = 'information/information_confirm_delete.html'
+    template_name = 'information/confirm_delete.html'
     context_object_name = 'information'
     success_url = reverse_lazy('information-list')
 
@@ -374,3 +403,10 @@ class TicketAnalysisView(TemplateView):
         })
 
         return context
+    def render_to_response(self, context, **response_kwargs):
+        if not self.request.headers.get('HX-Request'):
+            return HttpResponseForbidden(
+                render_to_string('custom_account/errors/htmx_only.html', context, request=self.request)
+            )
+        return super().render_to_response(context, **response_kwargs)
+

@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="container mx-auto px-4 py-6">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-2xl font-bold mb-6">{% if object %}Update{% else %}Create{% endif %} Ticket</h2>
 
-</body>
-</html>
+    <form method="post" hx-post="{{ request.path }}" hx-target="#content-container" hx-encoding="multipart/form-data">
+      {% csrf_token %}
+      <div class="space-y-4">
+
+      </div>
+
+      <div class="mt-6 flex justify-end space-x-4">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+          Save
+        </button>
+        <a hx-get="{% url 'agents:ticket-list' %}" hx-target="#content-container"
+           class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

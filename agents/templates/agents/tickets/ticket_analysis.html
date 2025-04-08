@@ -1,0 +1,29 @@
+<div class="container mx-auto px-4 py-6">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h1 class="text-2xl font-bold mb-6">Ticket Analytics</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold mb-2">Resolved Tickets</h3>
+        <p class="text-3xl font-bold text-blue-600">{{ tickets_per_day|length }}</p>
+      </div>
+
+      <div class="bg-orange-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold mb-2">In Progress</h3>
+        <p class="text-3xl font-bold text-orange-600">{{ in_progress_tickets }}</p>
+      </div>
+
+      <div class="bg-red-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold mb-2">Pending Tickets</h3>
+        <p class="text-3xl font-bold text-red-600">{{ unsolved_tickets_per_day|length }}</p>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <h3 class="text-xl font-semibold mb-4">Resolution Trends</h3>
+      <div class="bg-white p-4 rounded-lg shadow">
+        <!-- Add your chart implementation here -->
+      </div>
+    </div>
+  </div>
+</div>

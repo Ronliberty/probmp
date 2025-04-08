@@ -54,6 +54,11 @@ class TicketStatus(models.TextChoices):
     RESOLVED = 'resolved', 'Resolved'
     CLOSED = 'closed', 'Closed'
 
+class TicketPriority(models.TextChoices):
+    LOW = 'low', 'Low'
+    MEDIUM = 'medium', 'Medium'
+    HIGH = 'high', 'High'
+
 
 class Tickets(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tickets')
@@ -62,6 +67,16 @@ class Tickets(models.Model):
     description = models.TextField(max_length=700, blank=False, null=False)
     assigned_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="assigned_tickets")
     assigned_group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+    priority = models.CharField(
+        max_length=20,
+        choices=TicketPriority.choices,
+        default=TicketPriority.MEDIUM
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=TicketStatus.choices,
+        default=TicketStatus.OPEN
+    )
     slug = models.SlugField(unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -83,7 +98,7 @@ class Tickets(models.Model):
                 counter = slug
 
             self.slug = slug
-            
+
         super().save(*args, **kwargs)
 
 class Information(models.Model):

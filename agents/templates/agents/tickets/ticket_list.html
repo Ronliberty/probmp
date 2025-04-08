@@ -1,0 +1,43 @@
+<div class="container mx-auto px-4 py-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">All Tickets</h1>
+    <a hx-get="{% url 'agents:ticket-analysis' %}" hx-target="#content-container" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+      View Analytics
+    </a>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created At</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {% for ticket in tickets %}
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <a hx-get="{% url 'agents:ticket-detail' ticket.slug %}" hx-target="#content-container" class="text-blue-600 hover:text-blue-800">
+              {{ ticket.subject }}
+            </a>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ ticket.status_color }}-100 text-{{ ticket.status_color }}-800">
+              {{ ticket.get_status_display }}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ ticket.created_at|date:"M d, Y" }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <a hx-get="{% url 'agents:ticket-engage' ticket.slug %}" hx-target="#content-container" class="text-indigo-600 hover:text-indigo-900 mr-4">Engage</a>
+            <a hx-get="{% url 'agents:ticket-update' ticket.slug %}" hx-target="#content-container" class="text-green-600 hover:text-green-900 mr-4">Edit</a>
+            <a hx-get="{% url 'agents:ticket-delete' ticket.slug %}" hx-target="#content-container" class="text-red-600 hover:text-red-900">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

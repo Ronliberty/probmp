@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="container mx-auto px-4 py-6">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-2xl font-bold mb-6">Respond to Ticket</h2>
 
-</body>
-</html>
+    <form method="post" hx-post="{{ request.path }}" hx-target="#content-container">
+      {% csrf_token %}
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Status</label>
+          {{ form.status }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Response</label>
+          {{ form.response }}
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end space-x-4">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+          Submit Response
+        </button>
+        <a hx-get="{% url 'agents:ticket-detail' object.slug %}" hx-target="#content-container"
+           class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

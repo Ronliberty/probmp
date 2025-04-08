@@ -8,8 +8,12 @@ from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
 from payment.models import Invoice
+from agents.models import Tickets, TicketStatus
 from decimal import Decimal
+from django.db.models import Q
+
 User = get_user_model()
+
 
 class BaseDashboardView(LoginRequiredMixin, TemplateView):
     group_name = None
@@ -106,6 +110,30 @@ class SuperDashboard(LoginRequiredMixin, TemplateView):
 class AgentDashboardView(BaseDashboardView):
     template_name = 'dashboard/agent_dash.html'
     group_name = 'agent'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get tickets assigned to current agent
+        tickets = Tickets.objects.filter(
+            Q(assigned_user=self.request.user) |
+            Q(assigned_group__in=self.request.user.groups.all())
+        ).order_by('-created_at')
+
+        # Calculate statistics
+        today = timezone.now().date()
+        context['tickets'] = tickets
+        context['open_tickets'] = tickets.filter(status=TicketStatus.OPEN).count()
+        context['solved_today'] = tickets.filter(
+            status__in=[TicketStatus.RESOLVED, TicketStatus.CLOSED],
+            updated_at__date=today
+        ).count()
+
+        # For demonstration - you'll need real satisfaction data
+        total_resolved = tickets.filter(status=TicketStatus.RESOLVED).count()
+        context['satisfaction_rate'] = round((total_resolved / tickets.count()) * 100) if tickets.count() > 0 else 0
+
+        return context
 
 class ManagerDashboard(BaseDashboardView):
     template_name = 'dashboard/manger_dash.html'

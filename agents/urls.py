@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AgentView, AgentCreateView, AgentListView, AgentDeleteView, AgentDetailView, AgentUserDetailView, TicketEngageView, AgentUpdateView, TicketListView, TicketCreateView, TicketDetailView, TicketUpdateView, TicketDeleteView
+from .views import AgentView, AgentCreateView, AgentListView, AgentDeleteView, AgentDetailView, AgentUserDetailView, TicketAnalysisView, TicketEngageView, AgentUpdateView, TicketListView, TicketCreateView, TicketDetailView, TicketUpdateView, TicketDeleteView, InformationListView, InformationCreateView, InformationDetailView, InformationDeleteView
 
 
 app_name = 'agents'
@@ -30,8 +30,21 @@ urlpatterns = [
     path('<slug:slug>/engage/', TicketEngageView.as_view(), name='ticket-engage'),
 
 
-    #manager
+    path('analysis/tickets/', TicketAnalysisView.as_view(), name='ticket-analysis'),
 
+
+    #information
+    path('info/list', InformationListView.as_view(), name='info-list'),
+    path('info/create/', InformationCreateView.as_view(), name='info-create'),
+    path('info/<slug:slug>/', InformationDetailView.as_view(), name='info-detail'),
+
+    path('info/<slug:slug>/delete/', InformationDeleteView.as_view(), name='info-delete'),
 
 
 ]
+
+
+
+
+
+

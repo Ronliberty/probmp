@@ -9,12 +9,13 @@ urlpatterns = [
     path('', include('base.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('custom_account/', include('custom_account.urls')),
-    path('agents/', include('agents.urls')),
+
     path('chat/', include('chat.urls')),
     path('freelance/', include('freelance.urls')),
     path('partner/', include('partner.urls')),
     path('payment/', include('payment.urls')),
     path('service/', include('service.urls')),
+    path('agents/', include('agents.urls')),
     path('accounts/', include('allauth.urls')),
 path('logout/', LogoutView.as_view(), name='logout'),
 ]
